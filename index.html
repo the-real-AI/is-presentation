@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проектирование информационных систем — Мультимедийная презентация</title>
+  
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Dynamic Network Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Top Navigation & Controls Bar -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <div class="logo-pill">
+        <span class="pulse-dot"></span>
+        <span class="logo-text">ИС • ПРОЕКТИРОВАНИЕ</span>
+      </div>
+      <div class="topic-title" id="current-slide-topic">Титульный лист</div>
+    </div>
+
+    <div class="nav-center">
+      <div class="slide-counter-wrapper">
+        <span class="counter-label">Слайд</span>
+        <span class="counter-current" id="counter-current">01</span>
+        <span class="counter-divider">/</span>
+        <span class="counter-total">26</span>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <!-- Presentation Timer -->
+      <div class="timer-badge" id="timer-badge" title="Таймер выступления">
+        <i class="fa-regular fa-clock"></i>
+        <span id="presentation-timer">00:00</span>
+      </div>
+
+      <!-- Control Buttons -->
+      <button class="nav-btn" id="btn-sound" title="Вкл/Выкл звук эффектов">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <button class="nav-btn" id="btn-overview" title="План и все слайды (Сетка)">
+        <i class="fa-solid fa-grid-2"></i>
+        <i class="fa-solid fa-table-cells"></i>
+      </button>
+      <button class="nav-btn" id="btn-video" title="Мультимедиа & Видео материалы">
+        <i class="fa-solid fa-video"></i>
+      </button>
+      <button class="nav-btn" id="btn-help" title="Горячие клавиши (?)">
+        <i class="fa-solid fa-keyboard"></i>
+      </button>
+      <button class="nav-btn" id="btn-fullscreen" title="Полноэкранный режим (F)">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+      <button class="nav-btn deploy-pill-btn" id="btn-deploy" title="Инструкция по бесплатной публикации в облако">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span>В облако</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar (Always visible at top) -->
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+  </div>
+
+  <!-- Slides Viewport Container -->
+  <main class="presentation-container" id="presentation-container">
+    
+    <!-- ==================== СЛАЙД 1: ТИТУЛЬНЫЙ ЛИСТ (ОБЯЗАТЕЛЬНЫЙ) ==================== -->
+    <section class="slide active" data-slide="1" data-topic="Титульный лист">
+      <div class="slide-inner title-slide-layout">
+        <div class="badge-tech">
+          <i class="fa-solid fa-microchip"></i> Дисциплина: Проектирование информационных систем
+        </div>
+        <h1 class="hero-title">
+          Проектирование<br>
+          <span class="gradient-text">Информационных Систем</span>
+        </h1>
+        <p class="hero-subtitle">
+          Методологии, архитектурные парадигмы, современные технологии моделирования, анализа данных и интеграции распределенных решений
+        </p>
+
+        <!-- Interactive badges grid -->
+        <div class="title-meta-grid">
+          <div class="meta-card">
+            <i class="fa-solid fa-layer-group"></i>
+            <div>
+              <span class="meta-sub">Формат проекта</span>
+              <strong>Мультимедийный комплекс</strong>
+            </div>
+          </div>
+          <div class="meta-card">
+            <i class="fa-solid fa-sliders"></i>
+            <div>
+              <span class="meta-sub">Объем материала</span>
+              <strong>26 интерактивных слайдов</strong>
+            </div>
+          </div>
+          <div class="meta-card">
+            <i class="fa-solid fa-cloud"></i>
+            <div>
+              <span class="meta-sub">Развертывание</span>
+              <strong>Готово к облаку (Web / Cloud)</strong>
+            </div>
+          </div>
+          <div class="meta-card">
+            <i class="fa-solid fa-award"></i>
+            <div>
+              <span class="meta-sub">Стандарты</span>
+              <strong>ГОСТ 34 • ISO/IEC 12207</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="title-actions">
+          <button class="primary-btn pulse-button" onclick="Presentation.goToSlide(2)">
+            <span>Открыть план презентации</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button class="secondary-btn" onclick="Presentation.toggleOverviewModal()">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Каталог всех 26 разделов</span>
+          </button>
+        </div>
+
+        <div class="author-footer-pill">
+          <span><i class="fa-solid fa-user-graduate"></i> Автор проекта: Студент / Разработчик</span>
+          <span class="dot-sep">•</span>
+          <span><i class="fa-solid fa-calendar-check"></i> Академический год 2025/2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 2: ПЛАН ПРЕЗЕНТАЦИИ (ОБЯЗАТЕЛЬНЫЙ) ==================== -->
+    <section class="slide" data-slide="2" data-topic="План презентации">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag"><i class="fa-solid fa-list-ol"></i> Обязательный слайд №2</span>
+          <h2>Структурный план презентации (26 слайдов)</h2>
+          <p>Интерактивная карта модулей: нажмите на любой раздел, чтобы моментально перейти к нему</p>
+        </div>
+
+        <div class="plan-grid">
+          <div class="plan-block module-1" onclick="Presentation.goToSlide(3)">
+            <div class="block-num">Блок 01</div>
+            <h3><i class="fa-solid fa-cube"></i> Основы и Жизненный Цикл</h3>
+            <ul class="plan-items">
+              <li><span>3.</span> Понятие ИС и структура</li>
+              <li><span>4.</span> Цели и задачи проектирования</li>
+              <li><span>5.</span> Стадии ЖЦ (SDLC)</li>
+              <li><span>6.</span> Waterfall vs V-Model</li>
+              <li><span>7.</span> Agile, Scrum & Kanban</li>
+            </ul>
+            <div class="block-jump">Перейти (Слайды 3-7) <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+
+          <div class="plan-block module-2" onclick="Presentation.goToSlide(8)">
+            <div class="block-num">Блок 02</div>
+            <h3><i class="fa-solid fa-diagram-project"></i> Требования и Бизнес-логика</h3>
+            <ul class="plan-items">
+              <li><span>8.</span> Сбор требований (FURPS+, ТЗ)</li>
+              <li><span>9.</span> Бизнес-процессы (BPMN, IDEF0)</li>
+              <li><span>10.</span> Монолит vs Распределенные ИС</li>
+              <li><span>11.</span> Микросервисная архитектура</li>
+              <li><span>12.</span> Событийная модель (EDA / Kafka)</li>
+            </ul>
+            <div class="block-jump">Перейти (Слайды 8-12) <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+
+          <div class="plan-block module-3" onclick="Presentation.goToSlide(13)">
+            <div class="block-num">Блок 03</div>
+            <h3><i class="fa-solid fa-database"></i> Моделирование и Данные</h3>
+            <ul class="plan-items">
+              <li><span>13.</span> Облачные сервисы (Cloud & FaaS)</li>
+              <li><span>14.</span> Моделирование UML</li>
+              <li><span>15.</span> Проектирование Баз Данных (SQL/NoSQL)</li>
+              <li><span>16.</span> Проектирование UI/UX</li>
+              <li><span>17.</span> Интеграция систем и API</li>
+            </ul>
+            <div class="block-jump">Перейти (Слайды 13-17) <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+
+          <div class="plan-block module-4" onclick="Presentation.goToSlide(18)">
+            <div class="block-num">Блок 04</div>
+            <h3><i class="fa-solid fa-shield-halved"></i> Безопасность и Надежность</h3>
+            <ul class="plan-items">
+              <li><span>18.</span> Безопасность (Security by Design)</li>
+              <li><span>19.</span> Отказоустойчивость & High Availability</li>
+              <li><span>20.</span> CASE-средства и инструменты</li>
+              <li><span>21.</span> Тестирование архитектуры</li>
+              <li><span>22.</span> CI/CD и DevOps пайплайны</li>
+            </ul>
+            <div class="block-jump">Перейти (Слайды 18-22) <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+
+          <div class="plan-block module-5 highlight-block" onclick="Presentation.goToSlide(23)">
+            <div class="block-num">Блок 05</div>
+            <h3><i class="fa-solid fa-rocket"></i> Практика, Тренды и Итоги</h3>
+            <ul class="plan-items">
+              <li><span>23.</span> Экономика и оценка рисков ИС</li>
+              <li><span>24.</span> Практический кейс: E-Commerce</li>
+              <li><span>25.</span> Инновации и AI в проектировании</li>
+              <li class="strong-item"><span>26.</span> <strong>Выводы и Заключение</strong></li>
+            </ul>
+            <div class="block-jump">Перейти (Слайды 23-26) <i class="fa-solid fa-arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 3: ПОНЯТИЕ И СТРУКТУРА ИС ==================== -->
+    <section class="slide" data-slide="3" data-topic="Понятие ИС и ее структура">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Теоретический фундамент</span>
+          <h2>Что такое Информационная Система (ИС)?</h2>
+          <p>Взаимосвязанный комплекс средств, методов и персонала для сбора, обработки и выдачи информации</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass info-main">
+            <h3><i class="fa-solid fa-sitemap text-accent"></i> Архитектурные компоненты ИС</h3>
+            <p class="lead-text">
+              Современная ИС — это не просто программа, а социотехническая экосистема, объединяющая 5 взаимозависимых подсистем:
+            </p>
+            
+            <div class="system-parts-list">
+              <div class="sys-part-item">
+                <div class="sys-part-icon"><i class="fa-solid fa-server"></i></div>
+                <div>
+                  <strong>Hardware (Аппаратное обеспечение):</strong>
+                  <span>Серверы, вычислительные кластеры, сетевое оборудование, устройства ввода-вывода.</span>
+                </div>
+              </div>
+              <div class="sys-part-item">
+                <div class="sys-part-icon"><i class="fa-solid fa-code"></i></div>
+                <div>
+                  <strong>Software (Программное обеспечение):</strong>
+                  <span>Системное, платформенное и прикладное ПО, СУБД, микросервисы и библиотеки.</span>
+                </div>
+              </div>
+              <div class="sys-part-item">
+                <div class="sys-part-icon"><i class="fa-solid fa-database"></i></div>
+                <div>
+                  <strong>Data (Информационное обеспечение):</strong>
+                  <span>Структурированные и неструктурированные данные, метаданные, хранилища DWH/Data Lake.</span>
+                </div>
+              </div>
+              <div class="sys-part-item">
+                <div class="sys-part-icon"><i class="fa-solid fa-users-gear"></i></div>
+                <div>
+                  <strong>People (Организационное обеспечение):</strong>
+                  <span>Пользователи, системные администраторы, аналитики, инженеры поддержки.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-glass visual-panel">
+            <h3><i class="fa-solid fa-cubes text-accent"></i> Интерактивная схема взаимодействия</h3>
+            <div class="interactive-is-diagram">
+              <div class="diag-node diag-users pulse-subtle">
+                <i class="fa-solid fa-users"></i>
+                <span>Пользователи & Бизнес</span>
+              </div>
+              <div class="diag-arrows"><i class="fa-solid fa-arrow-down-up"></i></div>
+              <div class="diag-node diag-logic">
+                <i class="fa-solid fa-gears"></i>
+                <span>Бизнес-логика & Сервисы</span>
+              </div>
+              <div class="diag-arrows"><i class="fa-solid fa-arrow-down-up"></i></div>
+              <div class="diag-node diag-data">
+                <i class="fa-solid fa-database"></i>
+                <span>Хранилище Данных (DB)</span>
+              </div>
+            </div>
+            <div class="diagram-footer-note">
+              <i class="fa-solid fa-circle-info"></i> Цель проектирования — сбалансировать надежность, стоимость и скорость всех трех слоев.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 4: ЦЕЛИ И ЗАДАЧИ ПРОЕКТИРОВАНИЯ ==================== -->
+    <section class="slide" data-slide="4" data-topic="Цели и задачи проектирования">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Экономика & Качество</span>
+          <h2>Цели и Задачи Проектирования ИС</h2>
+          <p>Почему предварительное проектирование критически важно для коммерческого успеха проекта</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="feature-card">
+            <div class="card-badge bg-blue"><i class="fa-solid fa-bullseye"></i> Главная цель</div>
+            <h3>Соответствие бизнесу</h3>
+            <p>Трансформация бизнес-целей заказчика в формальные технические спецификации с гарантией окупаемости инвестиций (ROI).</p>
+            <ul class="mini-checklist">
+              <li><i class="fa-solid fa-check"></i> Устранение расхождений ожиданий</li>
+              <li><i class="fa-solid fa-check"></i> Формализация требований</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="card-badge bg-emerald"><i class="fa-solid fa-shield-cat"></i> Минимизация рисков</div>
+            <h3>Закон Боэма (Boehm's Law)</h3>
+            <p>Стоимость исправления дефекта на этапе проектирования в <strong>100 раз ниже</strong>, чем после ввода системы в промышленную эксплуатацию!</p>
+            <div class="cost-multiplier">
+              <span>Анализ: 1x</span> → <span>Код: 10x</span> → <span>Релиз: 100x</span>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="card-badge bg-purple"><i class="fa-solid fa-chart-line"></i> Масштабируемость</div>
+            <h3>Запас прочности архитектуры</h3>
+            <p>Закладка возможностей горизонтального масштабирования, отказоустойчивости и простой интеграции с будущими сервисами.</p>
+            <ul class="mini-checklist">
+              <li><i class="fa-solid fa-check"></i> Модульность компонентов</li>
+              <li><i class="fa-solid fa-check"></i> Независимый деплой узлов</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="banner-quote">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <div>
+            «Хорошая архитектура делает систему легко понимаемой, простой в разработке, удобной в поддержке и гибкой к изменениям.»
+            <span class="quote-author">— Роберт Мартин (Дядя Боб), Clean Architecture</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 5: ЖИЗНЕННЫЙ ЦИКЛ ИС (SDLC) ==================== -->
+    <section class="slide" data-slide="5" data-topic="Жизненный цикл ИС (SDLC)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Стандарт ISO/IEC 12207</span>
+          <h2>Жизненный Цикл Информационной Системы (SDLC)</h2>
+          <p>Непрерывный цикл от возникновения бизнес-потребности до полного вывода системы из эксплуатации</p>
+        </div>
+
+        <div class="sdlc-pipeline">
+          <div class="sdlc-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+            <div class="sdlc-title">1. Анализ</div>
+            <p>Сбор требований, ТЭО, определение границ проекта</p>
+          </div>
+          <div class="sdlc-connector"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="sdlc-step active-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-compass-drafting"></i></div>
+            <div class="sdlc-title">2. Проектирование</div>
+            <p>Архитектура, схемы БД, UML, спецификация API</p>
+          </div>
+          <div class="sdlc-connector"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="sdlc-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-code"></i></div>
+            <div class="sdlc-title">3. Разработка</div>
+            <p>Кодирование модулей, репозитории, Code Review</p>
+          </div>
+          <div class="sdlc-connector"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="sdlc-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-vial-circle-check"></i></div>
+            <div class="sdlc-title">4. Тестирование</div>
+            <p>QA, нагрузочные тесты, аудит безопасности</p>
+          </div>
+          <div class="sdlc-connector"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="sdlc-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-rocket"></i></div>
+            <div class="sdlc-title">5. Внедрение</div>
+            <p>Релиз, миграция данных, обучение пользователей</p>
+          </div>
+          <div class="sdlc-connector"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="sdlc-step">
+            <div class="sdlc-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div class="sdlc-title">6. Поддержка</div>
+            <p>Мониторинг, патчи, доработка функционала</p>
+          </div>
+        </div>
+
+        <div class="callout-box">
+          <i class="fa-solid fa-lightbulb"></i>
+          <div>
+            <strong>Ключевой вывод инженера:</strong> Проектирование — связующее звено между абстрактной идеей заказчика и машинным кодом разработчика. Ошибки здесь неизбежно разрушают последующие 4 этапа.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 6: КЛАССИЧЕСКИЕ МОДЕЛИ ЖЦ ==================== -->
+    <section class="slide" data-slide="6" data-topic="Классические модели (Waterfall, V-Model)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Традиционная инженерия</span>
+          <h2>Классические Модели ЖЦ: Водопад и V-Модель</h2>
+          <p>Последовательные регламентированные методологии проектирования и разработки</p>
+        </div>
+
+        <div class="content-columns-2">
+          <!-- Waterfall -->
+          <div class="card-glass">
+            <div class="model-badge">Каскадная модель (Waterfall)</div>
+            <h3><i class="fa-solid fa-water"></i> Водопадный подход</h3>
+            <p>Строго последовательный переход: фаза начинается только после 100% согласования и подписания документации предыдущей.</p>
+            <div class="pros-cons">
+              <div class="pros">
+                <span class="label-pro"><i class="fa-solid fa-plus"></i> Плюсы:</span>
+                <ul>
+                  <li>Четкая фиксация бюджета и сроков</li>
+                  <li>Исчерпывающая нормативная документация</li>
+                  <li>Прозрачный контроль по этапам</li>
+                </ul>
+              </div>
+              <div class="cons">
+                <span class="label-con"><i class="fa-solid fa-minus"></i> Минусы:</span>
+                <ul>
+                  <li>Крайняя негибкость к изменениям требований</li>
+                  <li>Позднее обнаружение ошибок интеграции</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- V-Model -->
+          <div class="card-glass">
+            <div class="model-badge">V-образная модель (V-Model)</div>
+            <h3><i class="fa-solid fa-check-double"></i> Валидация и Верификация</h3>
+            <p>Каждому уровню проектирования заранее сопоставляется соответствующий уровень тестирования и критерии приемки.</p>
+            <div class="v-model-mini">
+              <div class="v-row"><span>Требования бизнеса</span> <i class="fa-solid fa-arrows-left-right"></i> <span>Приемочные тесты</span></div>
+              <div class="v-row"><span>Системная архитектура</span> <i class="fa-solid fa-arrows-left-right"></i> <span>Системные тесты</span></div>
+              <div class="v-row"><span>Архитектура модулей</span> <i class="fa-solid fa-arrows-left-right"></i> <span>Интеграционные тесты</span></div>
+              <div class="v-row"><span>Детальный код</span> <i class="fa-solid fa-arrows-left-right"></i> <span>Юнит-тестирование</span></div>
+            </div>
+            <p class="small-text-note">Идеально для критически важных систем: медицина, космос, банкинг.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 7: ГИБКИЕ МЕТОДОЛОГИИ ==================== -->
+    <section class="slide" data-slide="7" data-topic="Гибкие методологии (Agile, Scrum, Kanban)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Современные подходы</span>
+          <h2>Гибкие Методологии: Agile, Scrum, Kanban</h2>
+          <p>Эволюционное проектирование через короткие итерации и непрерывную обратную связь</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="methodology-card">
+            <div class="method-header">
+              <i class="fa-solid fa-repeat method-icon"></i>
+              <h3>Agile Манифест</h3>
+            </div>
+            <p>Философия разработки, где люди и взаимодействие важнее процессов, а работающий продукт ценнее всеобъемлющей документации.</p>
+            <div class="tag-row">
+              <span class="tech-tag">Адаптивность</span>
+              <span class="tech-tag">Customer First</span>
+            </div>
+          </div>
+
+          <div class="methodology-card highlight-card">
+            <div class="method-header">
+              <i class="fa-solid fa-arrows-spin method-icon"></i>
+              <h3>Scrum Фреймворк</h3>
+            </div>
+            <p>Работа спринтами по 1–3 недели. На каждом спринте проектируется, создается и тестируется инкремент продукта, готовый к демонстрации.</p>
+            <div class="tag-row">
+              <span class="tech-tag">Спринт</span>
+              <span class="tech-tag">Product Backlog</span>
+              <span class="tech-tag">Ретроспектива</span>
+            </div>
+          </div>
+
+          <div class="methodology-card">
+            <div class="method-header">
+              <i class="fa-solid fa-table-columns method-icon"></i>
+              <h3>Kanban Система</h3>
+            </div>
+            <p>Визуализация потока задач на доске, ограничение незавершенной работы (WIP Limits), фокус на скорости прохождения тикетов от идеи до прода.</p>
+            <div class="tag-row">
+              <span class="tech-tag">WIP Лимит</span>
+              <span class="tech-tag">Lead Time</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="interactive-toggle-box">
+          <h4><i class="fa-solid fa-arrows-split-up-and-left"></i> Влияние Agile на Проектирование:</h4>
+          <p>Архитектура не "замораживается" один раз в начале на века, а развивается инкрементально через <strong>Архитектурные шипы (Architectural Spikes)</strong> и постоянный рефакторинг.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 8: СБОР И АНАЛИЗ ТРЕБОВАНИЙ ==================== -->
+    <section class="slide" data-slide="8" data-topic="Сбор и анализ требований к ИС">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Аналитика</span>
+          <h2>Сбор и Анализ Требований к Системе</h2>
+          <p>Основа спецификации: функциональные, нефункциональные требования и стандарты</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-layer-group text-accent"></i> Классификация требований</h3>
+            <div class="req-type-card">
+              <div class="req-title"><i class="fa-solid fa-gear"></i> Функциональные (FR)</div>
+              <p>Что система <strong>должна делать</strong>: оформление заказа, расчет скидки, генерация PDF-отчета, экспорт данных.</p>
+            </div>
+            <div class="req-type-card">
+              <div class="req-title"><i class="fa-solid fa-gauge-high"></i> Нефункциональные (NFR)</div>
+              <p>Какими <strong>свойствами качества</strong> система должна обладать: время отклика &lt; 200 мс, поддержка 10 000 одновременных пользователей, шифрование AES-256.</p>
+            </div>
+            <div class="furps-badge">
+              <strong>Модель FURPS+:</strong> Functionality • Usability • Reliability • Performance • Supportability
+            </div>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-file-contract text-accent"></i> Форматы спецификации</h3>
+            <div class="spec-formats">
+              <div class="spec-item">
+                <span class="badge-pill">ТЗ по ГОСТ 34.602-89</span>
+                <p>Классическое подробное Техническое Задание для государственных и корпоративных контрактов РФ.</p>
+              </div>
+              <div class="spec-item">
+                <span class="badge-pill">User Stories & Acceptance Criteria</span>
+                <p>«Как [роль], я хочу [действие], чтобы получить [ценность]» + критерии приемки по формуле Given-When-Then.</p>
+              </div>
+              <div class="spec-item">
+                <span class="badge-pill">Use Case Specification</span>
+                <p>Детальные сценарии взаимодействия актора с системой, включая альтернативные потоки и исключения.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 9: БИЗНЕС-МОДЕЛИРОВАНИЕ ==================== -->
+    <section class="slide" data-slide="9" data-topic="Бизнес-моделирование (BPMN, IDEF0)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Процессный подход</span>
+          <h2>Бизнес-Моделирование: BPMN 2.0 и IDEF0</h2>
+          <p>Моделирование бизнес-процессов организации «Как есть» (AS-IS) и «Как будет» (TO-BE)</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-diagram-next text-accent"></i> Стандарт BPMN 2.0</h3>
+            <p>Де-факто мировой стандарт описания исполняемых бизнес-процессов, понятный как руководству, так и движкам оркестрации (Camunda, Zeebe).</p>
+            <div class="bpmn-elements-grid">
+              <div class="bpmn-chip">
+                <div class="circle-elem start"></div>
+                <div><strong>События:</strong> Старт, таймер, сообщение, ошибка</div>
+              </div>
+              <div class="bpmn-chip">
+                <div class="rect-elem task"></div>
+                <div><strong>Действия (Tasks):</strong> Ручные задачи, скрипты, сервисные вызовы</div>
+              </div>
+              <div class="bpmn-chip">
+                <div class="diamond-elem gateway"></div>
+                <div><strong>Шлюзы (Gateways):</strong> Исключающее «ИЛИ» (XOR), параллельное «И» (AND)</div>
+              </div>
+              <div class="bpmn-chip">
+                <div class="pool-elem"></div>
+                <div><strong>Пул и Дорожки (Lanes):</strong> Разделение ролей и зон ответственности</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-arrows-split-up-and-left text-accent"></i> Трансформация AS-IS → TO-BE</h3>
+            <div class="as-is-comparison">
+              <div class="asis-box">
+                <h4><i class="fa-solid fa-clock-rotate-left"></i> Модель AS-IS</h4>
+                <ul>
+                  <li>Бумажный документооборот</li>
+                  <li>Дублирование ручного ввода данных</li>
+                  <li>Время согласования: 5-7 дней</li>
+                  <li>Высокий риск человеческой ошибки</li>
+                </ul>
+              </div>
+              <div class="arrow-trans"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div class="tobe-box">
+                <h4><i class="fa-solid fa-bolt"></i> Модель TO-BE (с новой ИС)</h4>
+                <ul>
+                  <li>Электронный сквозной реестр</li>
+                  <li>Автоматическая валидация и OCR</li>
+                  <li>Время согласования: 15 минут</li>
+                  <li>Аудит-лог и 100% прозрачность</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 10: АРХИТЕКТУРА ИС: МОНОЛИТ VS РАСПРЕДЕЛЕННЫЕ ==================== -->
+    <section class="slide" data-slide="10" data-topic="Архитектура ИС: Монолит vs Распределенные">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Архитектурные стили</span>
+          <h2>Архитектура Системы: Монолит vs Распределенные Системы</h2>
+          <p>Фундаментальный выбор архитектурного паттерна под масштаб и требования бизнеса</p>
+        </div>
+
+        <div class="content-columns-2">
+          <!-- Monolith -->
+          <div class="card-glass arch-compare-card">
+            <div class="arch-badge mono">Монолитная архитектура</div>
+            <h3><i class="fa-solid fa-cube"></i> Monolithic Architecture</h3>
+            <p>Вся функциональность (UI, бизнес-правила, доступ к данным) собирается и разворачивается как единый бинарный файл или процесс.</p>
+            <div class="arch-visual-mono">
+              <div class="box-layer">UI / Presentation</div>
+              <div class="box-layer">Business Logic (Orders, Users, Billing)</div>
+              <div class="box-layer">Data Access Layer</div>
+              <div class="box-layer db">Single Shared Database</div>
+            </div>
+            <div class="meta-tag-list">
+              <span class="tag-good"><i class="fa-solid fa-check"></i> Простота разработки и дебага</span>
+              <span class="tag-bad"><i class="fa-solid fa-xmark"></i> Сложно масштабировать команды</span>
+            </div>
+          </div>
+
+          <!-- Distributed -->
+          <div class="card-glass arch-compare-card">
+            <div class="arch-badge dist">Распределенная архитектура</div>
+            <h3><i class="fa-solid fa-network-wired"></i> Distributed Architecture</h3>
+            <p>Система разделена на изолированные автономные узлы, общающиеся между собой по сети через стандартизированные протоколы.</p>
+            <div class="arch-visual-dist">
+              <div class="dist-node">Auth Service <br><span>(DB 1)</span></div>
+              <div class="dist-node">Order Service <br><span>(DB 2)</span></div>
+              <div class="dist-node">Payment Service <br><span>(DB 3)</span></div>
+            </div>
+            <div class="meta-tag-list">
+              <span class="tag-good"><i class="fa-solid fa-check"></i> Независимый деплой и масштабирование</span>
+              <span class="tag-bad"><i class="fa-solid fa-triangle-exclamation"></i> Сложность консистентности данных</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 11: МИКРОСЕРВИСНАЯ АРХИТЕКТУРА ==================== -->
+    <section class="slide" data-slide="11" data-topic="Микросервисная архитектура">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Современный Enterprise</span>
+          <h2>Микросервисная Архитектура (Microservices)</h2>
+          <p>Декомпозиция сложной системы на набор слабосвязанных независимых сервисов</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-puzzle-piece"></i></div>
+            <h3>Domain-Driven Design (DDD)</h3>
+            <p>Разбиение системы на сервисы вокруг <strong>Ограниченных контекстов (Bounded Contexts)</strong>. Каждый сервис решает одну четкую бизнес-задачу.</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-door-open"></i></div>
+            <h3>API Gateway & Маршрутизация</h3>
+            <p>Единая точка входа для клиентов (Web, Mobile). Отвечает за аутентификацию, rate limiting, балансировку и агрегацию ответов.</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-database"></i></div>
+            <h3>Database per Service</h3>
+            <p>У каждого микросервиса собственная изолированная БД. Прямой доступ чужих сервисов в базу категорически запрещен только через API.</p>
+          </div>
+        </div>
+
+        <!-- Pattern table -->
+        <div class="card-glass mt-4">
+          <div class="tech-table-title"><i class="fa-solid fa-toolbox"></i> Ключевые паттерны микросервисов:</div>
+          <div class="micro-patterns-row">
+            <div class="pattern-pill"><strong>Service Mesh (Istio):</strong> Шифрование трафика mTLS и телеметрия</div>
+            <div class="pattern-pill"><strong>Circuit Breaker:</strong> Защита от каскадных сбоев при падении сервиса</div>
+            <div class="pattern-pill"><strong>Saga Pattern:</strong> Распределенные транзакции через компенсации</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 12: СОБЫТИЙНО-ОРИЕНТИРОВАННАЯ АРХИТЕКТУРА (EDA) ==================== -->
+    <section class="slide" data-slide="12" data-topic="Событийно-ориентированная архитектура (EDA)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Высокие нагрузки (Highload)</span>
+          <h2>Событийно-Ориентированная Архитектура (EDA)</h2>
+          <p>Асинхронная передача данных через события и брокеры сообщений</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-satellite-dish text-accent"></i> Принцип Event-Driven</h3>
+            <p>Вместо блокирующих HTTP вызовов сервисы публикуют события (<em>Events</em>) о свершившихся фактах (например, «ЗаказОплачен»), на которые подписываются заинтересованные потребители.</p>
+            
+            <div class="eda-flow-visual">
+              <div class="eda-node">Инициатор (Producer)</div>
+              <div class="eda-arrow"><i class="fa-solid fa-arrow-right"></i> Публикация события</div>
+              <div class="eda-broker"><i class="fa-solid fa-layer-group"></i> Message Broker</div>
+              <div class="eda-arrow"><i class="fa-solid fa-arrow-right"></i> Подписка</div>
+              <div class="eda-node">Подписчик (Consumer)</div>
+            </div>
+            
+            <div class="callout-mini">
+              <strong>Главное преимущество:</strong> Полная временная и пространственная развязка сервисов (Decoupling). Падение подписчика не ломает отправителя!
+            </div>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-server text-accent"></i> Стек технологий EDA</h3>
+            <div class="broker-comparison">
+              <div class="broker-item">
+                <span class="broker-badge">Apache Kafka</span>
+                <p>Распределенный журнал коммитов высокой пропускной способности (миллионы событий в секунду, репликация, долговременное хранение).</p>
+              </div>
+              <div class="broker-item">
+                <span class="broker-badge">RabbitMQ</span>
+                <p>Классический брокер очередей сообщений с гибкой маршрутизацией (Exchange, Binding, Direct, Topic, Fanout).</p>
+              </div>
+              <div class="broker-item">
+                <span class="broker-badge">Event Sourcing & CQRS</span>
+                <p>Состояние восстанавливается из цепочки неизменяемых событий, а операции чтения и записи разделены на разные модели.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 13: ОБЛАЧНЫЕ АРХИТЕКТУРЫ И SERVERLESS ==================== -->
+    <section class="slide" data-slide="13" data-topic="Облачные архитектуры и Serverless">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Cloud-Native парадигма</span>
+          <h2>Облачные Архитектуры и Serverless</h2>
+          <p>Использование инфраструктуры как кода (IaC) и бессерверных вычислений</p>
+        </div>
+
+        <div class="cloud-models-grid">
+          <div class="cloud-card">
+            <span class="cloud-level">IaaS</span>
+            <h3>Инфраструктура</h3>
+            <p>Аренда виртуальных машин, сетей и дисков (AWS EC2, Google Compute Engine, Yandex Cloud Compute).</p>
+            <div class="ctrl-bar"><div class="fill-bar w-80"></div></div>
+            <span class="bar-sub">Контроль ОС и ядра</span>
+          </div>
+
+          <div class="cloud-card">
+            <span class="cloud-level">PaaS</span>
+            <h3>Платформа</h3>
+            <p>Готовые управляемые среды исполнения и базы данных (Managed PostgreSQL, Kubernetes as a Service).</p>
+            <div class="ctrl-bar"><div class="fill-bar w-50"></div></div>
+            <span class="bar-sub">Фокус на коде приложения</span>
+          </div>
+
+          <div class="cloud-card highlight-card">
+            <span class="cloud-level">FaaS / Serverless</span>
+            <h3>Бессерверные функции</h3>
+            <p>Выполнение кода по событию без управления серверами. Автомасштабирование от 0 до 10 000 инстансов (AWS Lambda, Cloud Functions).</p>
+            <div class="ctrl-bar"><div class="fill-bar w-20"></div></div>
+            <span class="bar-sub">Оплата только за миллисекунды работы</span>
+          </div>
+
+          <div class="cloud-card">
+            <span class="cloud-level">SaaS</span>
+            <h3>ПО как услуга</h3>
+            <p>Готовый сервис для конечных пользователей (CRM, ERP, облачная почта, Google Workspace).</p>
+            <div class="ctrl-bar"><div class="fill-bar w-5"></div></div>
+            <span class="bar-sub">Готовая эксплуатация</span>
+          </div>
+        </div>
+
+        <div class="banner-footer-stats">
+          <div class="stat-pill"><i class="fa-solid fa-arrows-up-down"></i> Auto-Scaling по нагрузке</div>
+          <div class="stat-pill"><i class="fa-solid fa-globe"></i> Геораспределение (Multi-Region)</div>
+          <div class="stat-pill"><i class="fa-solid fa-coins"></i> FinOps: оптимизация затрат</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 14: ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОЕКТИРОВАНИЕ И UML ==================== -->
+    <section class="slide" data-slide="14" data-topic="Моделирование UML">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Язык визуализации</span>
+          <h2>Объектно-Ориентированное Проектирование и UML</h2>
+          <p>Unified Modeling Language: универсальный язык проектирования программных систем</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-shapes text-accent"></i> Две ветви диаграмм UML</h3>
+            <div class="uml-branch">
+              <div class="branch-col">
+                <h4><i class="fa-solid fa-cubes"></i> Структурные (Статика)</h4>
+                <ul>
+                  <li><strong>Class Diagram:</strong> Классы, атрибуты, методы, связи (наследование, агрегация).</li>
+                  <li><strong>Component Diagram:</strong> Модули системы и их интерфейсы.</li>
+                  <li><strong>Deployment Diagram:</strong> Физическое размещение на серверах.</li>
+                </ul>
+              </div>
+              <div class="branch-col">
+                <h4><i class="fa-solid fa-person-running"></i> Поведенческие (Динамика)</h4>
+                <ul>
+                  <li><strong>Use Case Diagram:</strong> Прецеденты использования и акторы.</li>
+                  <li><strong>Sequence Diagram:</strong> Временная шкала обмена сообщениями.</li>
+                  <li><strong>State Machine:</strong> Состояния объектов и переходы.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Sequence preview -->
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-timeline text-accent"></i> Интерактивный пример: Sequence Diagram</h3>
+            <div class="mini-sequence-box">
+              <div class="seq-actors">
+                <div class="actor">Пользователь</div>
+                <div class="actor">API Gateway</div>
+                <div class="actor">Auth Service</div>
+                <div class="actor">Database</div>
+              </div>
+              <div class="seq-timeline-lines">
+                <div class="msg-row r1">
+                  <span class="arrow-msg">1. POST /login</span>
+                </div>
+                <div class="msg-row r2">
+                  <span class="arrow-msg">2. Проверка токена</span>
+                </div>
+                <div class="msg-row r3">
+                  <span class="arrow-msg">3. SELECT user hash</span>
+                </div>
+                <div class="msg-row r4 return">
+                  <span class="arrow-msg">4. 200 OK + JWT Bearer</span>
+                </div>
+              </div>
+            </div>
+            <div class="sequence-caption">
+              UML устраняет двусмысленность между аналитиками, программистами и тестировщиками.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 15: ПРОЕКТИРОВАНИЕ БАЗ ДАННЫХ И ХРАНИЛИЩ ==================== -->
+    <section class="slide" data-slide="15" data-topic="Проектирование Баз Данных (SQL/NoSQL)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Уровень хранения данных</span>
+          <h2>Проектирование Баз Данных: Реляционные vs NoSQL</h2>
+          <p>Моделирование структуры данных, нормализация и выбор СУБД под профиль нагрузки</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <div class="db-head-type"><i class="fa-solid fa-table"></i> SQL (Реляционные СУБД)</div>
+            <h3>PostgreSQL, MySQL, Oracle</h3>
+            <p>Четкая строгая схема таблиц, внешние ключи (FK), соответствие принципам <strong>ACID</strong> (Атомарность, Согласованность, Изолированность, Надежность).</p>
+            <div class="norm-steps">
+              <div class="norm-badge"><strong>1NF:</strong> Атомарность значений в полях</div>
+              <div class="norm-badge"><strong>2NF:</strong> Устранение частичных зависимостей от ключа</div>
+              <div class="norm-badge"><strong>3NF:</strong> Устранение транзитивных зависимостей</div>
+            </div>
+            <div class="use-case-tag">Идеально для: Финансы, биллинг, ERP, учетные системы</div>
+          </div>
+
+          <div class="card-glass">
+            <div class="db-head-type"><i class="fa-solid fa-bolt"></i> NoSQL (Нереляционные)</div>
+            <h3>MongoDB, Redis, Cassandra, Neo4j</h3>
+            <p>Гибкая схема (Schemaless), горизонтальное масштабирование (Sharding), соответствие модели <strong>BASE</strong> и CAP-теореме.</p>
+            <div class="nosql-categories">
+              <div class="nosql-item"><strong>Документные (MongoDB):</strong> Хранение JSON-структур</div>
+              <div class="nosql-item"><strong>Key-Value (Redis):</strong> Сверхбыстрый кэш в оперативной памяти</div>
+              <div class="nosql-item"><strong>Колоночные (ClickHouse):</strong> Аналитика Big Data (OLAP)</div>
+              <div class="nosql-item"><strong>Графовые (Neo4j):</strong> Социальные графы, связи сущностей</div>
+            </div>
+            <div class="use-case-tag">Идеально для: Highload, аналитика, кэширование, соцсети</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 16: ПРОЕКТИРОВАНИЕ UI/UX ==================== -->
+    <section class="slide" data-slide="16" data-topic="Проектирование интерфейсов (UI/UX)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Человеко-машинное взаимодействие</span>
+          <h2>Проектирование Пользовательских Интерфейсов (UI/UX)</h2>
+          <p>Создание интуитивно понятного, доступного и эргономичного пользовательского опыта</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-route"></i></div>
+            <h3>Исследование & CJM</h3>
+            <p><strong>Customer Journey Map:</strong> Карта пути пользователя, фиксация точек боли (Pain Points), составление портретов пользователей (Personas).</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-pen-ruler"></i></div>
+            <h3>Прототипирование (Figma)</h3>
+            <p>От бумажных скетчей (Low-Fidelity) до интерактивных кликабельных макетов (High-Fidelity) для юзабилити-тестирования до написания кода.</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge"><i class="fa-solid fa-swatchbook"></i></div>
+            <h3>Дизайн-системы & UI Kit</h3>
+            <p>Единая библиотека переиспользуемых токенов и компонентов: кнопки, типографика, цветовая палитра, состояния элементов.</p>
+          </div>
+        </div>
+
+        <div class="standards-bar mt-4">
+          <div class="std-box">
+            <i class="fa-solid fa-universal-access"></i>
+            <div>
+              <strong>Доступность (Accessibility WCAG 2.1):</strong>
+              <span>Контрастность цветов, навигация с клавиатуры, поддержка Screen Reader для слабовидящих.</span>
+            </div>
+          </div>
+          <div class="std-box">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <div>
+              <strong>Mobile-First & Responsive Design:</strong>
+              <span>Адаптивность интерфейса под любые экраны: смартфоны, планшеты, десктопы 4K.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 17: ИНТЕГРАЦИЯ СИСТЕМ И API ==================== -->
+    <section class="slide" data-slide="17" data-topic="Интеграция систем и API">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Сетевой протокольный стек</span>
+          <h2>Интеграция Систем и Проектирование API</h2>
+          <p>Стандарты межсервисного обмена и концепция «Контракт в первую очередь» (API-First)</p>
+        </div>
+
+        <div class="api-protocols-grid">
+          <div class="api-card">
+            <div class="api-type">REST API</div>
+            <h4>HTTP / JSON</h4>
+            <p>Самый распространенный стандарт. Основан на ресурсах и стандартных HTTP методах: GET, POST, PUT, DELETE. Статусы 200, 400, 500.</p>
+            <div class="api-tag">OpenAPI / Swagger</div>
+          </div>
+
+          <div class="api-card">
+            <div class="api-type">GraphQL</div>
+            <h4>Гибкие запросы</h4>
+            <p>Клиент сам запрашивает ровно те поля, которые ему нужны, в одном запросе. Исключает Over-fetching и Under-fetching данных.</p>
+            <div class="api-tag">Single Endpoint / POST</div>
+          </div>
+
+          <div class="api-card highlight-card">
+            <div class="api-type">gRPC</div>
+            <h4>Высокая производительность</h4>
+            <p>Бинарная сериализация Protocol Buffers поверх HTTP/2. Минимальный оверхед по сети, строгая типизация, двунаправленный стриминг.</p>
+            <div class="api-tag">Межсервисный обмен</div>
+          </div>
+
+          <div class="api-card">
+            <div class="api-type">Webhooks & WS</div>
+            <h4>Real-time события</h4>
+            <p>WebSockets для постоянного дуплексного соединения (чаты, котировки) и Webhooks для асинхронных уведомлений от платежных систем.</p>
+            <div class="api-tag">Push уведомления</div>
+          </div>
+        </div>
+
+        <div class="callout-box">
+          <i class="fa-solid fa-file-code"></i>
+          <div>
+            <strong>Принцип Contract-First:</strong> Спецификация API (Swagger YAML) согласуется до начала разработки. Фронтенд и бэкенд разрабатываются параллельно по мок-серверам!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 18: ИНФОРМАЦИОННАЯ БЕЗОПАСНОСТЬ ==================== -->
+    <section class="slide" data-slide="18" data-topic="Информационная безопасность (Security by Design)">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Кибербезопасность</span>
+          <h2>Информационная Безопасность: Security by Design</h2>
+          <p>Встраивание механизмов защиты на самых ранних этапах проектирования архитектуры</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card-glass">
+            <div class="circle-icon-badge bg-rose"><i class="fa-solid fa-id-card"></i></div>
+            <h3>Аутентификация & Авторизация</h3>
+            <p><strong>OAuth 2.0 & OpenID Connect:</strong> Отраслевые протоколы для безопасной делегированной авторизации.</p>
+            <p><strong>JWT (JSON Web Tokens):</strong> Подписанные криптографические токены доступа без состояния (stateless).</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge bg-amber"><i class="fa-solid fa-user-shield"></i></div>
+            <h3>Модели контроля доступа</h3>
+            <p><strong>RBAC (Role-Based):</strong> Доступ на основе ролей (Администратор, Менеджер, Пользователь).</p>
+            <p><strong>ABAC (Attribute-Based):</strong> Гранулярный доступ по атрибутам контекста (время, IP-адрес, отдел).</p>
+          </div>
+
+          <div class="card-glass">
+            <div class="circle-icon-badge bg-cyan"><i class="fa-solid fa-lock"></i></div>
+            <h3>Защита данных и шифрование</h3>
+            <p><strong>Data in Transit:</strong> Обязательный протокол TLS 1.3 для всего сетевого трафика.</p>
+            <p><strong>Data at Rest:</strong> Надежное шифрование дисков и полей БД алгоритмами AES-256, хэширование паролей через Argon2/Bcrypt.</p>
+          </div>
+        </div>
+
+        <div class="owasp-banner mt-4">
+          <i class="fa-solid fa-shield-virus"></i>
+          <span>Учет рисков <strong>OWASP Top 10:</strong> Защита от SQL-инъекций, XSS, CSRF, небезопасной десериализации и утечек секретов.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 19: ОТКАЗОУСТОЙЧИВОСТЬ И HIGH AVAILABILITY ==================== -->
+    <section class="slide" data-slide="19" data-topic="Отказоустойчивость & High Availability">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Надежность (Reliability Engineering)</span>
+          <h2>Отказоустойчивость и Высокая Доступность (HA)</h2>
+          <p>Проектирование систем, способных непрерывно функционировать при авариях узлов</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-chart-pie text-accent"></i> Метрики надежности SLA</h3>
+            <div class="sla-table">
+              <div class="sla-row">
+                <span class="sla-name">99.0% ("Две девятки")</span>
+                <span class="sla-time">Простой: до 3.65 дней в год</span>
+              </div>
+              <div class="sla-row">
+                <span class="sla-name">99.9% ("Три девятки")</span>
+                <span class="sla-time">Простой: до 8.76 часов в год</span>
+              </div>
+              <div class="sla-row highlight-sla">
+                <span class="sla-name">99.99% ("Четыре девятки")</span>
+                <span class="sla-time">Простой: менее 52 минут в год!</span>
+              </div>
+            </div>
+
+            <div class="dr-box mt-3">
+              <div><strong>RTO (Recovery Time Objective):</strong> Допустимое время восстановления после сбоя.</div>
+              <div><strong>RPO (Recovery Point Objective):</strong> Допустимый объем потерянных данных при аварии.</div>
+            </div>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-arrows-split-up-and-left text-accent"></i> Архитектурные паттерны устойчивости</h3>
+            <div class="ha-patterns">
+              <div class="ha-item">
+                <i class="fa-solid fa-arrows-spin"></i>
+                <div>
+                  <strong>Балансировка нагрузки (Load Balancing):</strong>
+                  <span>Распределение запросов через Nginx, HAProxy или Cloud Load Balancer (Round Robin, Least Connections).</span>
+                </div>
+              </div>
+              <div class="ha-item">
+                <i class="fa-solid fa-clone"></i>
+                <div>
+                  <strong>Репликация БД (Master-Replica):</strong>
+                  <span>Автоматический Failover на горячую реплику при выходе из строя основного мастера.</span>
+                </div>
+              </div>
+              <div class="ha-item">
+                <i class="fa-solid fa-ban"></i>
+                <div>
+                  <strong>Отсутствие единой точки отказа (No SPOF):</strong>
+                  <span>Дублирование критических узлов: питания, свитчей, ЦОДов (Availability Zones).</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 20: CASE-СРЕДСТВА И СТЕК ИНСТРУМЕНТОВ ==================== -->
+    <section class="slide" data-slide="20" data-topic="CASE-средства и стек проектировщика">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Инструментарий инженера</span>
+          <h2>CASE-Средства и Современный Стек Проектировщика</h2>
+          <p>Computer-Aided Software Engineering: инструментальная среда автоматизации проектирования</p>
+        </div>
+
+        <div class="case-grid">
+          <div class="case-card">
+            <div class="case-icon"><i class="fa-solid fa-bezier-curve"></i></div>
+            <h4>CASE-моделирование</h4>
+            <p>Инструменты визуального проектирования диаграмм классов, сущностей и процессов.</p>
+            <div class="tool-list">Enterprise Architect • Visual Paradigm • Draw.io • PlantUML</div>
+          </div>
+
+          <div class="case-card">
+            <div class="case-icon"><i class="fa-solid fa-code-compare"></i></div>
+            <h4>Проектирование API</h4>
+            <p>Документирование контрактов, генерация моков и автоматических SDK для клиентов.</p>
+            <div class="tool-list">SwaggerHub • Postman • Insomnia • Stoplight</div>
+          </div>
+
+          <div class="case-card">
+            <div class="case-icon"><i class="fa-solid fa-database"></i></div>
+            <h4>Проектирование БД</h4>
+            <p>ER-моделирование, версионирование миграций и реверс-инжиниринг баз данных.</p>
+            <div class="tool-list">DBeaver • DataGrip • pgModeler • Liquibase</div>
+          </div>
+
+          <div class="case-card">
+            <div class="case-icon"><i class="fa-solid fa-list-check"></i></div>
+            <h4>Управление проектом</h4>
+            <p>Трекинг требований, задач, спринтов и проектной базы знаний.</p>
+            <div class="tool-list">Jira • Confluence • Notion • GitLab Issues</div>
+          </div>
+        </div>
+
+        <div class="callout-box mt-3">
+          <i class="fa-solid fa-terminal"></i>
+          <div>
+            <strong>Современный тренд: «Docs-as-Code» & «Diagrams-as-Code»</strong> — описание архитектуры в текстовых файлах (Markdown, Mermaid.js, PlantUML) с версионированием в Git!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 21: ТЕСТИРОВАНИЕ И ВЕРИФИКАЦИЯ ==================== -->
+    <section class="slide" data-slide="21" data-topic="Тестирование и валидация архитектуры">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Контроль качества (QA)</span>
+          <h2>Тестирование и Верификация Архитектурных Решений</h2>
+          <p>Пирамида тестирования, нагрузочные испытания и проверка устойчивости</p>
+        </div>
+
+        <div class="content-columns-2">
+          <!-- Testing Pyramid -->
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-layer-group text-accent"></i> Пирамида тестирования</h3>
+            <div class="pyramid-wrapper">
+              <div class="pyramid-level p-e2e">
+                <span>E2E & UI Тесты (Selenium, Playwright) — 10%</span>
+              </div>
+              <div class="pyramid-level p-integration">
+                <span>Интеграционные & API Тесты (Testcontainers) — 30%</span>
+              </div>
+              <div class="pyramid-level p-unit">
+                <span>Модульные Unit-тесты (Быстрые, изолированные) — 60%</span>
+              </div>
+            </div>
+            <p class="pyramid-desc">
+              Чем ниже уровень пирамиды, тем быстрее и дешевле выполняются тесты, позволяя находить ошибки мгновенно в процессе коммита.
+            </p>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-fire-burner text-accent"></i> Нагрузочное тестирование & Chaos</h3>
+            <div class="testing-types-list">
+              <div class="t-type-item">
+                <i class="fa-solid fa-gauge-simple-high"></i>
+                <div>
+                  <strong>Stress & Load Testing (k6, JMeter):</strong>
+                  <span>Имитация сотен тысяч пользователей для выявления узких мест (Bottlenecks) и утечек памяти.</span>
+                </div>
+              </div>
+              <div class="t-type-item">
+                <i class="fa-solid fa-skull-crossbones"></i>
+                <div>
+                  <strong>Chaos Engineering (Chaos Monkey):</strong>
+                  <span>Искусственное случайное отключение серверов в продакшене для проверки самовосстановления системы.</span>
+                </div>
+              </div>
+              <div class="t-type-item">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <div>
+                  <strong>ATAM (Architecture Tradeoff Analysis):</strong>
+                  <span>Метод оценки компромиссов между производительностью, стоимостью и безопасностью.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 22: CI/CD И DEVOPS ПАЙПЛАЙНЫ ==================== -->
+    <section class="slide" data-slide="22" data-topic="CI/CD и автоматизация развертывания">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Автоматизация доставки</span>
+          <h2>CI/CD и DevOps: Автоматизация Развертывания</h2>
+          <p>Непрерывная интеграция и доставка как гарантия надежного жизненного цикла ИС</p>
+        </div>
+
+        <div class="cicd-pipeline-container">
+          <div class="cicd-node">
+            <i class="fa-brands fa-git-alt"></i>
+            <span>Git Push</span>
+            <small>Коммит кода</small>
+          </div>
+          <div class="cicd-flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="cicd-node">
+            <i class="fa-solid fa-hammer"></i>
+            <span>Build</span>
+            <small>Сборка артефактов</small>
+          </div>
+          <div class="cicd-flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="cicd-node">
+            <i class="fa-solid fa-vial"></i>
+            <span>Test</span>
+            <small>Автотесты & Линтер</small>
+          </div>
+          <div class="cicd-flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="cicd-node">
+            <i class="fa-brands fa-docker"></i>
+            <span>Containerize</span>
+            <small>Docker образ</small>
+          </div>
+          <div class="cicd-flow-arrow"><i class="fa-solid fa-angle-right"></i></div>
+
+          <div class="cicd-node live-node">
+            <i class="fa-solid fa-dharmachakra"></i>
+            <span>Kubernetes</span>
+            <small>Zero-Downtime Deploy</small>
+          </div>
+        </div>
+
+        <div class="grid-2 mt-4">
+          <div class="card-glass">
+            <h4><i class="fa-solid fa-repeat"></i> Стратегии развертывания</h4>
+            <ul class="clean-list">
+              <li><strong>Blue-Green Deployment:</strong> Переключение роутера между двумя идентичными контурами без простоя.</li>
+              <li><strong>Canary Release:</strong> Направление 5% трафика на новую версию для проверки метрик до полного раскатывания.</li>
+            </ul>
+          </div>
+          <div class="card-glass">
+            <h4><i class="fa-solid fa-cube"></i> Инфраструктура как код (IaC)</h4>
+            <p>Управление серверами, сетями и политиками безопасности через декларативные конфигурационные файлы (Terraform, Ansible).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 23: ЭКОНОМИКА И ОЦЕНКА РИСКОВ ==================== -->
+    <section class="slide" data-slide="23" data-topic="Экономика и оценка стоимости проекта">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Финансовый инжиниринг</span>
+          <h2>Экономика Проекта, TCO и Управление Рисками</h2>
+          <p>Расчет совокупной стоимости владения системой и анализ проектных угроз</p>
+        </div>
+
+        <div class="content-columns-2">
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-calculator text-accent"></i> Совокупная стоимость владения (TCO)</h3>
+            <p class="mb-2"><strong>TCO = CAPEX + OPEX</strong></p>
+            <div class="capex-opex-grid">
+              <div class="cost-box capex">
+                <h4>CAPEX (Капитальные затраты)</h4>
+                <ul>
+                  <li>Проектирование и R&D</li>
+                  <li>Разработка и лицензии ПО</li>
+                  <li>Покупка серверного оборудования</li>
+                  <li>Первоначальное внедрение</li>
+                </ul>
+              </div>
+              <div class="cost-box opex">
+                <h4>OPEX (Операционные расходы)</h4>
+                <ul>
+                  <li>Оплата облачной инфраструктуры</li>
+                  <li>Зарплата команды сопровождения</li>
+                  <li>Техническая поддержка 24/7</li>
+                  <li>Резервное копирование и трафик</li>
+                </ul>
+              </div>
+            </div>
+            <div class="roi-formula">
+              <strong>ROI:</strong> Окупаемость инвестиций = (Доход от внедрения - Затраты) / Затраты × 100%
+            </div>
+          </div>
+
+          <div class="card-glass">
+            <h3><i class="fa-solid fa-triangle-exclamation text-accent"></i> Матрица проектных рисков</h3>
+            <div class="risk-matrix-mini">
+              <div class="risk-cell high">
+                <strong>Критический:</strong>
+                <span>Расползание границ ТЗ (Scope Creep). Защита: поэтапная фиксация требований в контракте.</span>
+              </div>
+              <div class="risk-cell medium">
+                <strong>Средний:</strong>
+                <span>Увольнение ключевого архитектора. Защита: актуальная документация и Bus Factor &gt; 1.</span>
+              </div>
+              <div class="risk-cell low">
+                <strong>Умеренный:</strong>
+                <span>Сбои облачного провайдера. Защита: Multi-Cloud архитектура и регулярные бэкапы.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 24: ПРАКТИЧЕСКИЙ КЕЙС ==================== -->
+    <section class="slide" data-slide="24" data-topic="Практический кейс: E-Commerce платформа">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Сквозной практический пример</span>
+          <h2>Практический Кейс: Проектирование E-Commerce Платформы</h2>
+          <p>Комплексная архитектура масштабируемого интернет-магазина (10 000 RPS в пике)</p>
+        </div>
+
+        <div class="ecommerce-architecture-diagram">
+          <div class="client-layer">
+            <div class="chip-tech"><i class="fa-solid fa-mobile"></i> Mobile App</div>
+            <div class="chip-tech"><i class="fa-solid fa-laptop"></i> Web SPA (React)</div>
+          </div>
+
+          <div class="gateway-layer">
+            <div class="gateway-box">
+              <i class="fa-solid fa-shield-halved"></i> Cloudflare CDN + NGINX API Gateway (WAF / Rate Limit)
+            </div>
+          </div>
+
+          <div class="services-layer">
+            <div class="service-box">
+              <div class="s-title"><i class="fa-solid fa-tags"></i> Catalog Service</div>
+              <small>Go / Elasticsearch</small>
+            </div>
+            <div class="service-box">
+              <div class="s-title"><i class="fa-solid fa-cart-shopping"></i> Cart Service</div>
+              <small>Node.js / Redis Cluster</small>
+            </div>
+            <div class="service-box">
+              <div class="s-title"><i class="fa-solid fa-credit-card"></i> Payment Service</div>
+              <small>Java Spring / PostgreSQL</small>
+            </div>
+            <div class="service-box">
+              <div class="s-title"><i class="fa-solid fa-truck-fast"></i> Delivery Service</div>
+              <small>Python / PostgreSQL</small>
+            </div>
+          </div>
+
+          <div class="bus-layer">
+            <div class="kafka-bar">
+              <i class="fa-solid fa-bolt"></i> Apache Kafka Message Bus (Event: OrderPlaced, PaymentReceived, Shipped)
+            </div>
+          </div>
+        </div>
+
+        <div class="case-results-summary mt-3">
+          <div class="res-item"><i class="fa-solid fa-bolt"></i> Время отклика каталога: <strong>&lt; 35 мс</strong></div>
+          <div class="res-item"><i class="fa-solid fa-shield-check"></i> Защита от потери платежей: <strong>100%</strong> (Saga + Outbox)</div>
+          <div class="res-item"><i class="fa-solid fa-server"></i> Доступность сервиса: <strong>99.98%</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 25: ТРЕНДЫ В ПРОЕКТИРОВАНИИ ИС ==================== -->
+    <section class="slide" data-slide="25" data-topic="Тренды в проектировании ИС">
+      <div class="slide-inner">
+        <div class="slide-header">
+          <span class="slide-tag">Взгляд в будущее</span>
+          <h2>Современные Тренды в Проектировании ИС</h2>
+          <p>Инновационные технологии, меняющие ландшафт корпоративного системного инжиниринга</p>
+        </div>
+
+        <div class="trends-grid">
+          <div class="trend-card">
+            <div class="trend-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI-Native</div>
+            <h3>ИИ в Архитектуре</h3>
+            <p>Применение LLM и автономных агентов для автоматической генерации схем, валидации ТЗ и поиска скрытых архитектурных антипаттернов.</p>
+          </div>
+
+          <div class="trend-card">
+            <div class="trend-badge"><i class="fa-solid fa-cubes-stacked"></i> Low-Code / No-Code</div>
+            <h3>Компонуемые платформы</h3>
+            <p>Быстрая сборка внутренних систем из готовых модулей (Composable Enterprise), ускоряющая Time-to-Market в 3–5 раз.</p>
+          </div>
+
+          <div class="trend-card">
+            <div class="trend-badge"><i class="fa-solid fa-leaf"></i> Green Computing</div>
+            <h3>Экологическая архитектура</h3>
+            <p>Проектирование энергоэффективного кода, минимизация углеродного следа дата-центров и оптимизация серверных мощностей.</p>
+          </div>
+
+          <div class="trend-card">
+            <div class="trend-badge"><i class="fa-solid fa-tower-broadcast"></i> Edge & IoT</div>
+            <h3>Граничные вычисления</h3>
+            <p>Перенос обработки информации непосредственно к датчикам и умным устройствам для снижения сетевых задержек до &lt; 5 мс.</p>
+          </div>
+        </div>
+
+        <div class="quote-future">
+          <i class="fa-solid fa-sparkles"></i>
+          <span>Главный тренд системного инженера — переход от статических «монолитных проектов» к динамическим, самомасштабируемым и самовосстанавливающимся экосистемам.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== СЛАЙД 26: ВЫВОД И ЗАКЛЮЧЕНИЕ (ОБЯЗАТЕЛЬНЫЙ) ==================== -->
+    <section class="slide" data-slide="26" data-topic="Вывод и заключение">
+      <div class="slide-inner conclusion-slide-layout">
+        <div class="slide-header text-center">
+          <span class="slide-tag"><i class="fa-solid fa-flag-checkered"></i> Обязательный слайд №26</span>
+          <h2>Выводы и Заключение</h2>
+          <p>Итоги комплексного исследования процесса проектирования информационных систем</p>
+        </div>
+
+        <div class="conclusions-grid">
+          <div class="conclusion-box">
+            <div class="c-num">01</div>
+            <h3>Фундамент надежности</h3>
+            <p>Грамотное проектирование экономит до <strong>70% бюджета</strong> на этапе разработки и технической поддержки, предотвращая фатальные переделки.</p>
+          </div>
+
+          <div class="conclusion-box">
+            <div class="c-num">02</div>
+            <h3>Баланс методологий</h3>
+            <p>Успешный проект сочетает системный анализ требований (ГОСТ / UML) с гибкостью современных итеративных подходов (Agile / Scrum).</p>
+          </div>
+
+          <div class="conclusion-box">
+            <div class="c-num">03</div>
+            <h3>Модульность и Облака</h3>
+            <p>Слабая связанность модулей, API-контракты и Cloud-Native технологии гарантируют масштабируемость системы на годы вперед.</p>
+          </div>
+
+          <div class="conclusion-box">
+            <div class="c-num">04</div>
+            <h3>Безопасность с первого дня</h3>
+            <p>Концепция Security by Design и автоматизированные CI/CD пайплайны защищают данные пользователей и снижают риски сбоев до минимума.</p>
+          </div>
+        </div>
+
+        <!-- Final Q&A card -->
+        <div class="qa-banner">
+          <div class="qa-content">
+            <div class="qa-icon"><i class="fa-solid fa-comments"></i></div>
+            <div>
+              <h3>Спасибо за внимание!</h3>
+              <p>Готов ответить на ваши вопросы по теме «Проектирование информационных систем»</p>
+            </div>
+          </div>
+          <div class="qa-actions">
+            <button class="primary-btn" onclick="Presentation.goToSlide(1)">
+              <i class="fa-solid fa-rotate-left"></i> В начало презентации
+            </button>
+            <button class="secondary-btn" onclick="Presentation.openDeployModal()">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Опубликовать в облако бесплатно
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Floating Navigation Dock -->
+  <footer class="bottom-dock">
+    <div class="dock-inner">
+      <button class="dock-btn" id="dock-btn-prev" title="Предыдущий слайд (Стрелка влево или Backspace)">
+        <i class="fa-solid fa-chevron-left"></i>
+        <span>Назад</span>
+      </button>
+
+      <div class="dock-slide-list" id="dock-dots-container">
+        <!-- 26 dynamic interactive dots injected by JS -->
+      </div>
+
+      <button class="dock-btn primary-dock-btn" id="dock-btn-next" title="Следующий слайд (Стрелка вправо или Пробел)">
+        <span>Вперед</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- ==================== МОДАЛЬНЫЕ ОКНА И ОВЕРЛЕИ ==================== -->
+
+  <!-- 1. Модальное окно: Сетка всех 26 слайдов (Overview) -->
+  <div class="modal-overlay" id="modal-overview">
+    <div class="modal-box modal-large">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-table-cells text-accent"></i>
+          <span>Оглавление презентации (Все 26 слайдов)</span>
+        </div>
+        <button class="modal-close" onclick="Presentation.toggleOverviewModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="slides-thumbnail-grid" id="thumbnail-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Модальное окно: Мультимедиа и Видео материалы -->
+  <div class="modal-overlay" id="modal-video">
+    <div class="modal-box modal-medium">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-circle-play text-accent"></i>
+          <span>Мультимедийные видеоматериалы по проектированию ИС</span>
+        </div>
+        <button class="modal-close" onclick="Presentation.toggleVideoModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          Обучающие видео и интерактивные анимации по системному проектированию, архитектуре баз данных и микросервисам:
+        </p>
+
+        <div class="video-cards-grid">
+          <!-- Video 1 -->
+          <div class="video-card">
+            <div class="video-embed-wrapper">
+              <iframe 
+                src="https://www.youtube-nocookie.com/embed/i53Gi_K3o7I?enablejsapi=1" 
+                title="System Design Basics" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-card-info">
+              <h4>System Design: Основы проектирования распределенных систем</h4>
+              <p>Разбор понятий масштабирования, балансировки, кэширования и брокеров сообщений.</p>
+            </div>
+          </div>
+
+          <!-- Video 2 -->
+          <div class="video-card">
+            <div class="video-embed-wrapper">
+              <iframe 
+                src="https://www.youtube-nocookie.com/embed/cz1eQd2y96E?enablejsapi=1" 
+                title="Microservices Architecture Explained" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-card-info">
+              <h4>Микросервисы: Архитектура, плюсы, минусы и паттерны</h4>
+              <p>Наглядный обзор перехода от монолита к микросервисам и паттерна API Gateway.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="interactive-multimedia-demo mt-4">
+          <h4><i class="fa-solid fa-wave-pulse"></i> Встроенная мультимедийная анимация потока данных ИС</h4>
+          <div class="multimedia-canvas-wrapper">
+            <div class="data-flow-simulation" id="data-flow-sim">
+              <div class="sim-node">Клиент (User)</div>
+              <div class="sim-packet" id="sim-packet">📦 Request [GET /api/v1/orders]</div>
+              <div class="sim-node">Балансировщик NGINX</div>
+              <div class="sim-node">Микросервис заказов</div>
+              <div class="sim-node">PostgreSQL Cluster</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Модальное окно: Инструкция по бесплатной публикации в Облако -->
+  <div class="modal-overlay" id="modal-deploy">
+    <div class="modal-box modal-medium">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+          <span>Как открыть презентацию бесплатно в облаке (Без локалки)</span>
+        </div>
+        <button class="modal-close" onclick="Presentation.toggleDeployModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="deploy-banner">
+          <i class="fa-solid fa-circle-check text-emerald"></i>
+          <div>
+            <strong>100% бесплатно и навсегда!</strong> Ваш сайт будет открываться по красивой ссылке с любого телефона, планшета, ноутбука или проектора в аудитории.
+          </div>
+        </div>
+
+        <div class="deploy-methods-tabs">
+          <div class="tab-header">
+            <button class="tab-btn active" onclick="Presentation.switchDeployTab('github')">
+              <i class="fa-brands fa-github"></i> Способ 1: GitHub Pages
+            </button>
+            <button class="tab-btn" onclick="Presentation.switchDeployTab('netlify')">
+              <i class="fa-solid fa-bolt"></i> Способ 2: Netlify Drop (За 30 сек)
+            </button>
+            <button class="tab-btn" onclick="Presentation.switchDeployTab('vercel')">
+              <i class="fa-solid fa-play"></i> Способ 3: Vercel
+            </button>
+          </div>
+
+          <!-- Tab 1: GitHub Pages -->
+          <div class="tab-content active" id="tab-github">
+            <ol class="deploy-steps">
+              <li>Зайдите на <a href="https://github.com" target="_blank" rel="noopener">github.com</a> и создайте новый публичный репозиторий (например <code>is-presentation</code>).</li>
+              <li>Загрузите в него 3 файла этого проекта: <code>index.html</code>, <code>style.css</code> и <code>script.js</code>.</li>
+              <li>Перейдите во вкладку <strong>Settings</strong> → слева выберите раздел <strong>Pages</strong>.</li>
+              <li>В разделе «Branch» выберите ветку <code>main</code> и папку <code>/(root)</code>, затем нажмите <strong>Save</strong>.</li>
+              <li>Через 1 минуту ваша презентация будет доступна всему миру по ссылке:<br>
+                <code class="url-code">https://ваш-логин.github.io/is-presentation/</code>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Tab 2: Netlify Drop -->
+          <div class="tab-content" id="tab-netlify">
+            <ol class="deploy-steps">
+              <li>Откройте сайт <a href="https://app.netlify.com/drop" target="_blank" rel="noopener">app.netlify.com/drop</a>.</li>
+              <li>Просто <strong>перетащите мышкой папку с презентацией</strong> в круглое окно браузера!</li>
+              <li>Регистрация даже не обязательна — сайт моментально появится в интернете с бесплатным SSL-сертификатом (HTTPS).</li>
+              <li>Вы получите постоянную ссылку вида: <code class="url-code">https://super-presentation-xxxx.netlify.app</code></li>
+            </ol>
+          </div>
+
+          <!-- Tab 3: Vercel -->
+          <div class="tab-content" id="tab-vercel">
+            <ol class="deploy-steps">
+              <li>Зайдите на <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a> и войдите через GitHub.</li>
+              <li>Нажмите <strong>Add New Project</strong> и выберите репозиторий с презентацией.</li>
+              <li>Нажмите кнопку <strong>Deploy</strong>.</li>
+              <li>Через 15 секунд презентация будет развернута на высокоскоростной глобальной сети CDN!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Модальное окно: Справка по клавишам -->
+  <div class="modal-overlay" id="modal-help">
+    <div class="modal-box modal-small">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-keyboard text-accent"></i>
+          <span>Горячие клавиши управления</span>
+        </div>
+        <button class="modal-close" onclick="Presentation.toggleHelpModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="keys-grid">
+          <div class="key-row"><kbd>→</kbd> или <kbd>Space</kbd> <span>Следующий слайд</span></div>
+          <div class="key-row"><kbd>←</kbd> или <kbd>Backspace</kbd> <span>Предыдущий слайд</span></div>
+          <div class="key-row"><kbd>Home</kbd> <span>Титульный лист (Слайд 1)</span></div>
+          <div class="key-row"><kbd>End</kbd> <span>Выводы и Заключение (Слайд 26)</span></div>
+          <div class="key-row"><kbd>F</kbd> <span>Полноэкранный режим</span></div>
+          <div class="key-row"><kbd>O</kbd> или <kbd>Esc</kbd> <span>Сетка всех слайдов</span></div>
+          <div class="key-row"><kbd>M</kbd> <span>Вкл / Выкл звук эффектов</span></div>
+          <div class="key-row"><kbd>?</kbd> <span>Открыть эту справку</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
