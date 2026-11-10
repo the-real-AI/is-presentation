@@ -1,6 +1,6 @@
 /**
  * ПРОЕКТИРОВАНИЕ ИНФОРМАЦИОННЫХ СИСТЕМ
- * Презентационный движок: навигация, интерактив, звук и холст
+ * Презентационный движок с расширенными анимациями, счетчиками и эффектами
  */
 
 const Presentation = (() => {
@@ -29,7 +29,7 @@ const Presentation = (() => {
   const modalHelp = document.getElementById('modal-help');
   const thumbnailGrid = document.getElementById('thumbnail-grid');
 
-  // Audio Context (Synthesized sounds without external mp3s)
+  // Audio Context (Synthesized sounds)
   let audioCtx = null;
 
   function initAudio() {
@@ -66,13 +66,15 @@ const Presentation = (() => {
   }
 
   function playSlideSound() {
-    playTone(520, 'sine', 0.06, 0.04);
-    setTimeout(() => playTone(680, 'sine', 0.08, 0.03), 40);
+    const baseFreq = 480 + (currentSlide * 10);
+    playTone(baseFreq, 'sine', 0.05, 0.035);
+    setTimeout(() => playTone(baseFreq + 160, 'sine', 0.07, 0.03), 35);
   }
 
   function playSuccessSound() {
-    playTone(440, 'triangle', 0.08, 0.05);
-    setTimeout(() => playTone(880, 'triangle', 0.12, 0.04), 80);
+    playTone(523.25, 'triangle', 0.1, 0.05); // C5
+    setTimeout(() => playTone(659.25, 'triangle', 0.1, 0.05), 80); // E5
+    setTimeout(() => playTone(783.99, 'triangle', 0.16, 0.05), 160); // G5
   }
 
   // Timer functionality
@@ -123,6 +125,109 @@ const Presentation = (() => {
     });
   }
 
+  // Animated Numbers Counter for Active Slide
+  function triggerNumberCounters(slideEl) {
+    if (!slideEl) return;
+    const counters = slideEl.querySelectorAll('.stat-val, .res-item strong');
+    counters.forEach(counter => {
+      const originalText = counter.getAttribute('data-original-val') || counter.textContent.trim();
+      if (!counter.hasAttribute('data-original-val')) {
+        counter.setAttribute('data-original-val', originalText);
+      }
+
+      // Check if it's purely a number or percentage
+      const match = originalText.match(/^([<>]?\s*)?(\d+([.,]\d+)?)(.*)$/);
+      if (match) {
+        const prefix = match[1] || '';
+        const targetNum = parseFloat(match[2].replace(',', '.'));
+        const suffix = match[4] || '';
+
+        if (!isNaN(targetNum) && targetNum > 0) {
+          let current = 0;
+          const duration = 600;
+          const steps = 20;
+          const increment = targetNum / steps;
+          const stepTime = duration / steps;
+
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= targetNum) {
+              counter.textContent = originalText;
+              clearInterval(timer);
+            } else {
+              const displayVal = Number.isInteger(targetNum) 
+                ? Math.floor(current) 
+                : current.toFixed(2);
+              counter.textContent = `${prefix}${displayVal}${suffix}`;
+            }
+          }, stepTime);
+        }
+      }
+    });
+  }
+
+  // Confetti Animation for Slide 26
+  let confettiParticles = [];
+  let confettiAnimFrame = null;
+
+  function launchConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'confetti-canvas';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    confettiParticles = [];
+    const colors = ['#00f2fe', '#4facfe', '#10b981', '#f59e0b', '#f43f5e', '#a855f7'];
+
+    for (let i = 0; i < 90; i++) {
+      confettiParticles.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+        y: canvas.height * 0.7,
+        vx: (Math.random() - 0.5) * 14,
+        vy: -Math.random() * 14 - 6,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 10,
+        opacity: 1
+      });
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+
+      confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.45; // gravity
+        p.rotation += p.rotSpeed;
+        p.opacity -= 0.009;
+
+        if (p.opacity > 0 && p.y < canvas.height + 20) {
+          alive = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        }
+      });
+
+      if (alive) {
+        confettiAnimFrame = requestAnimationFrame(animateConfetti);
+      } else {
+        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      }
+    }
+
+    animateConfetti();
+  }
+
   // Go to slide
   function goToSlide(targetSlide) {
     if (targetSlide < 1 || targetSlide > totalSlides) return;
@@ -143,18 +248,24 @@ const Presentation = (() => {
     if (nextSlideEl) {
       nextSlideEl.classList.remove('slide-prev');
       nextSlideEl.classList.add('active');
+      triggerNumberCounters(nextSlideEl);
     }
 
     currentSlide = targetSlide;
     playSlideSound();
     updateUI();
+
+    // Trigger celebration when reaching Slide 26
+    if (currentSlide === 26) {
+      playSuccessSound();
+      launchConfetti();
+    }
   }
 
   function nextSlide() {
     if (currentSlide < totalSlides) {
       goToSlide(currentSlide + 1);
     } else {
-      // Reached the end
       playSuccessSound();
     }
   }
@@ -170,6 +281,8 @@ const Presentation = (() => {
     // Counter
     if (counterCurrent) {
       counterCurrent.textContent = String(currentSlide).padStart(2, '0');
+      counterCurrent.style.transform = 'scale(1.3)';
+      setTimeout(() => { counterCurrent.style.transform = 'scale(1)'; }, 200);
     }
 
     // Active slide topic
@@ -242,20 +355,6 @@ const Presentation = (() => {
     if (newState) modalHelp.classList.add('open');
   }
 
-  function switchDeployTab(tabName) {
-    const buttons = document.querySelectorAll('.deploy-methods-tabs .tab-btn');
-    const contents = document.querySelectorAll('.deploy-methods-tabs .tab-content');
-
-    buttons.forEach(btn => btn.classList.remove('active'));
-    contents.forEach(content => content.classList.remove('active'));
-
-    const activeContent = document.getElementById(`tab-${tabName}`);
-    if (activeContent) activeContent.classList.add('active');
-
-    const clickedBtn = Array.from(buttons).find(b => b.textContent.toLowerCase().includes(tabName));
-    if (clickedBtn) clickedBtn.classList.add('active');
-  }
-
   // Fullscreen
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
@@ -287,13 +386,12 @@ const Presentation = (() => {
   // Keyboard navigation
   function setupKeyboard() {
     window.addEventListener('keydown', (e) => {
-      // Ignore if typing inside input
       if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
       switch (e.key) {
         case 'ArrowRight':
         case 'PageDown':
-        case ' ': // Space
+        case ' ':
           e.preventDefault();
           nextSlide();
           break;
@@ -317,7 +415,7 @@ const Presentation = (() => {
 
         case 'f':
         case 'F':
-        case 'а': // Russian layout support
+        case 'а':
         case 'А':
           toggleFullscreen();
           break;
@@ -359,22 +457,17 @@ const Presentation = (() => {
 
     window.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
       const diff = touchEndX - touchStartX;
       if (Math.abs(diff) > minSwipeDistance) {
-        if (diff < 0) {
-          nextSlide(); // Swiped left -> next
-        } else {
-          prevSlide(); // Swiped right -> prev
-        }
+        if (diff < 0) nextSlide();
+        else prevSlide();
       }
-    }
+    }, { passive: true });
   }
 
-  // Background Interactive Network Particles Canvas
+  // Interactive Background Canvas with Shockwave on Click
+  let shockwaves = [];
+
   function initCanvasAnimation() {
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
@@ -388,22 +481,49 @@ const Presentation = (() => {
       height = canvas.height = window.innerHeight;
     });
 
+    window.addEventListener('click', (e) => {
+      shockwaves.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 5,
+        maxRadius: 100,
+        opacity: 0.6
+      });
+    });
+
     const particles = [];
-    const count = Math.min(Math.floor((width * height) / 16000), 70);
+    const count = Math.min(Math.floor((width * height) / 14000), 75);
 
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
         radius: Math.random() * 2 + 1,
-        color: Math.random() > 0.5 ? 'rgba(0, 242, 254, ' : 'rgba(99, 102, 241, '
+        color: Math.random() > 0.4 ? 'rgba(0, 242, 254, ' : 'rgba(99, 102, 241, '
       });
     }
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
+
+      // Draw shockwaves
+      for (let s = shockwaves.length - 1; s >= 0; s--) {
+        const sw = shockwaves[s];
+        sw.radius += 3.5;
+        sw.opacity -= 0.02;
+
+        if (sw.opacity <= 0 || sw.radius >= sw.maxRadius) {
+          shockwaves.splice(s, 1);
+        } else {
+          ctx.strokeStyle = `rgba(0, 242, 254, ${sw.opacity})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
 
       // Draw connections
       for (let i = 0; i < particles.length; i++) {
@@ -412,8 +532,8 @@ const Presentation = (() => {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
-            const alpha = (1 - dist / 130) * 0.15;
+          if (dist < 135) {
+            const alpha = (1 - dist / 135) * 0.18;
             ctx.strokeStyle = `rgba(0, 242, 254, ${alpha})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -434,7 +554,7 @@ const Presentation = (() => {
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        ctx.fillStyle = p.color + '0.6)';
+        ctx.fillStyle = p.color + '0.7)';
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -446,15 +566,58 @@ const Presentation = (() => {
     animate();
   }
 
+  // Interactive Diagram Click Listeners (Failover, Swagger, Kanban)
+  function initInteractiveWidgets() {
+    // Slide 19: Failover node click
+    const failedNode = document.querySelector('.node-ha-box.failed');
+    if (failedNode) {
+      failedNode.style.cursor = 'pointer';
+      failedNode.setAttribute('title', 'Нажмите для симуляции перезапуска сервера!');
+      failedNode.addEventListener('click', () => {
+        if (failedNode.classList.contains('failed')) {
+          failedNode.classList.remove('failed');
+          failedNode.classList.add('healthy');
+          failedNode.querySelector('strong').textContent = 'Node 02';
+          failedNode.querySelector('small').textContent = 'RECOVERED (33%)';
+          failedNode.querySelector('i').className = 'fa-solid fa-circle-check';
+          playSuccessSound();
+        } else {
+          failedNode.classList.remove('healthy');
+          failedNode.classList.add('failed');
+          failedNode.querySelector('strong').textContent = 'Node 02';
+          failedNode.querySelector('small').textContent = 'CRASHED (0%)';
+          failedNode.querySelector('i').className = 'fa-solid fa-circle-xmark';
+          playTone(280, 'sawtooth', 0.15, 0.05);
+        }
+      });
+    }
+
+    // Slide 17: Swagger POST click
+    const swaggerHeader = document.querySelector('.swagger-header-bar');
+    if (swaggerHeader) {
+      swaggerHeader.style.cursor = 'pointer';
+      swaggerHeader.setAttribute('title', 'Нажмите для симуляции вызова API!');
+      swaggerHeader.addEventListener('click', () => {
+        const bodyCode = document.querySelector('.swagger-body-code');
+        if (bodyCode) {
+          bodyCode.style.transition = 'background 0.3s ease';
+          bodyCode.style.background = 'rgba(16, 185, 129, 0.15)';
+          playTone(660, 'sine', 0.08, 0.04);
+          setTimeout(() => {
+            bodyCode.style.background = '#090e17';
+          }, 400);
+        }
+      });
+    }
+  }
+
   // Setup Event Listeners
   function initListeners() {
-    // Dock buttons
     const btnPrev = document.getElementById('dock-btn-prev');
     const btnNext = document.getElementById('dock-btn-next');
     if (btnPrev) btnPrev.addEventListener('click', prevSlide);
     if (btnNext) btnNext.addEventListener('click', nextSlide);
 
-    // Nav buttons
     if (btnSound) btnSound.addEventListener('click', toggleSound);
     if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
 
@@ -470,7 +633,6 @@ const Presentation = (() => {
     const btnDeploy = document.getElementById('btn-deploy');
     if (btnDeploy) btnDeploy.addEventListener('click', () => toggleDeployModal());
 
-    // Close modal on background click
     [modalOverview, modalVideo, modalDeploy, modalHelp].forEach(m => {
       if (m) {
         m.addEventListener('click', (e) => {
@@ -488,11 +650,11 @@ const Presentation = (() => {
     setupTouchSwipes();
     initListeners();
     initCanvasAnimation();
+    initInteractiveWidgets();
     startTimer();
     updateUI();
   }
 
-  // Public API
   return {
     init,
     goToSlide,
@@ -502,8 +664,7 @@ const Presentation = (() => {
     toggleVideoModal,
     toggleDeployModal,
     openDeployModal: () => toggleDeployModal(true),
-    toggleHelpModal,
-    switchDeployTab
+    toggleHelpModal
   };
 })();
 
