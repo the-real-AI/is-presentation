@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ПРОЕКТИРОВАНИЕ ИНФОРМАЦИОННЫХ СИСТЕМ
  * Презентационный движок, оптимизированный для сенсорных интерактивных досок (Smartboard)
  * Поддержка: мультитач, свайпы, лазерная указка/маркер, мгновенный отклик на касания
@@ -265,6 +265,12 @@ const Presentation = (() => {
     currentSlide = targetSlide;
     playSlideSound();
     updateUI();
+
+    if (currentSlide === 9) {
+      startBpmnSimulation();
+    } else {
+      pauseBpmnSimulation();
+    }
 
     if (currentSlide === 26) {
       playSuccessSound();
@@ -663,8 +669,344 @@ const Presentation = (() => {
     animate();
   }
 
-  // Interactive Widgets (Failover simulation & API click)
+  // BPMN 2.0 Real-time Interactive Process Simulator
+  let bpmnTimer = null;
+  let bpmnScenarioIndex = 0; // 0: Approve, 1: Reject
+  let bpmnAutoMode = true;
+
+  function setBpmnFeed(iconHtml, stepText, descText, statusType = '') {
+    const feedIcon = document.getElementById('bpmn-feed-icon');
+    const feedStep = document.getElementById('bpmn-feed-step');
+    const feedDesc = document.getElementById('bpmn-feed-desc');
+    const feedCard = document.getElementById('bpmn-live-feed');
+
+    if (feedIcon) feedIcon.innerHTML = iconHtml;
+    if (feedStep) feedStep.textContent = stepText;
+    if (feedDesc) feedDesc.textContent = descText;
+    if (feedCard) {
+      feedCard.className = 'bpmn-live-feed ' + (statusType ? 'status-' + statusType : '');
+    }
+  }
+
+  function setTokenPosition(x, y, glowColor = '#00f2fe', coreColor = '#00f2fe') {
+    const token = document.getElementById('dynamic-bpmn-token');
+    const tokenGlow = document.getElementById('token-glow-circle');
+    const tokenCore = document.getElementById('token-core-circle');
+
+    if (token) {
+      token.style.transform = 	ranslate(px, px);
+      token.style.opacity = '1';
+    }
+    if (tokenGlow) tokenGlow.setAttribute('fill', glowColor);
+    if (tokenCore) tokenCore.setAttribute('fill', coreColor);
+  }
+
+  function runBpmnScenario(type = 'approve') {
+    if (bpmnTimer) clearTimeout(bpmnTimer);
+
+    const token = document.getElementById('dynamic-bpmn-token');
+    const scoreBadge = document.getElementById('score-live-badge');
+    const scoreText = document.getElementById('score-live-text');
+    const nodeScoring = document.getElementById('node-scoring');
+    const nodeGateway = document.getElementById('node-gateway');
+    const nodeApprove = document.getElementById('node-approve');
+    const nodeReject = document.getElementById('node-reject');
+    const nodeEndApprove = document.getElementById('node-end-approve');
+    const nodeEndReject = document.getElementById('node-end-reject');
+    const wireApprove = document.getElementById('wire-approve');
+    const wireReject = document.getElementById('wire-reject');
+
+    // Reset wire classes & badges
+    if (wireApprove) wireApprove.classList.remove('flow-active');
+    if (wireReject) wireReject.classList.remove('flow-active');
+    if (scoreBadge) scoreBadge.setAttribute('opacity', '0');
+
+    // STEP 1: START (t = 0)
+    setTokenPosition(50, 105, '#00f2fe', '#00f2fe');
+    setBpmnFeed(
+      '<i class="fa-solid fa-file-lines text-cyan"></i>',
+      'Шаг 1/4: Подача заявки через мобильный банк',
+      'Клиент заполнил форму. Стартовое событие BPMN активировано, токен запущен в обработку.',
+      ''
+    );
+    playTone(520, 'sine', 0.05, 0.03);
+
+    // STEP 2: SCORING (t = 900ms)
+    bpmnTimer = setTimeout(() => {
+      setTokenPosition(172, 105, '#00f2fe', '#00f2fe');
+      if (nodeScoring) {
+        nodeScoring.classList.add('pulse-node');
+        setTimeout(() => nodeScoring.classList.remove('pulse-node'), 800);
+      }
+      playTone(660, 'sine', 0.07, 0.04);
+
+      if (type === 'approve') {
+        if (scoreText) scoreText.textContent = 'Score: 780';
+        if (scoreBadge) scoreBadge.setAttribute('opacity', '1');
+        setBpmnFeed(
+          '<i class="fa-solid fa-brain text-cyan fa-spin"></i>',
+          'Шаг 2/4: AI-Скоринг (ML модель за 40 мс)',
+          'Анализ кредитной истории и транзакционной активности. Результат: 780 / 850 (Высокий рейтинг).',
+          ''
+        );
+      } else {
+        if (scoreText) scoreText.textContent = 'Score: 490';
+        if (scoreBadge) scoreBadge.setAttribute('opacity', '1');
+        setBpmnFeed(
+          '<i class="fa-solid fa-brain text-amber fa-spin"></i>',
+          'Шаг 2/4: AI-Скоринг (ML модель за 40 мс)',
+          'Анализ кредитной истории. Выявлена высокая долговая нагрузка. Результат: 490 / 850 (Критический риск).',
+          ''
+        );
+      }
+
+      // STEP 3: GATEWAY XOR (t = 2200ms)
+      bpmnTimer = setTimeout(() => {
+        if (scoreBadge) scoreBadge.setAttribute('opacity', '0');
+        setTokenPosition(295, 105, '#f59e0b', '#f59e0b');
+        if (nodeGateway) {
+          nodeGateway.classList.add('pulse-node');
+          setTimeout(() => nodeGateway.classList.remove('pulse-node'), 700);
+        }
+        playTone(740, 'triangle', 0.08, 0.04);
+
+        if (type === 'approve') {
+          if (wireApprove) wireApprove.classList.add('flow-active');
+          setBpmnFeed(
+            '<i class="fa-solid fa-code-branch text-emerald"></i>',
+            'Шаг 3/4: Шлюз XOR — Проверка [Score ≥ 700]',
+            'Условие: 780 ≥ 700 = ИСТИНА. Токен автоматически направляется в верхнюю ветку (Одобрение).',
+            ''
+          );
+        } else {
+          if (wireReject) wireReject.classList.add('flow-active');
+          setBpmnFeed(
+            '<i class="fa-solid fa-code-branch text-rose"></i>',
+            'Шаг 3/4: Шлюз XOR — Проверка [Score ≥ 700]',
+            'Условие: 490 < 700 = ЛОЖЬ. Токен автоматически направляется в нижнюю ветку (Отказ).',
+            ''
+          );
+        }
+
+        // STEP 4: TASK ACTION (t = 3400ms)
+        bpmnTimer = setTimeout(() => {
+          if (type === 'approve') {
+            setTokenPosition(427, 55, '#10b981', '#10b981');
+            if (nodeApprove) {
+              nodeApprove.classList.add('pulse-node');
+              setTimeout(() => nodeApprove.classList.remove('pulse-node'), 800);
+            }
+            playTone(880, 'sine', 0.08, 0.04);
+            setBpmnFeed(
+              '<i class="fa-solid fa-circle-check text-emerald"></i>',
+              'Шаг 4/4: Сервисная задача «Одобрить заявку»',
+              'Сформирован электронный договор, зарезервирован кредитный лимит в АБС банка.',
+              'success'
+            );
+          } else {
+            setTokenPosition(427, 155, '#f43f5e', '#f43f5e');
+            if (nodeReject) {
+              nodeReject.classList.add('pulse-node');
+              setTimeout(() => nodeReject.classList.remove('pulse-node'), 800);
+            }
+            playTone(340, 'sawtooth', 0.1, 0.04);
+            setBpmnFeed(
+              '<i class="fa-solid fa-circle-xmark text-rose"></i>',
+              'Шаг 4/4: Сервисная задача «Отклонить заявку»',
+              'Сформирован официальный отказ по риск-политике без привлечения ручного труда операторов.',
+              'danger'
+            );
+          }
+
+          // STEP 5: END EVENT (t = 4600ms)
+          bpmnTimer = setTimeout(() => {
+            if (type === 'approve') {
+              setTokenPosition(530, 55, '#10b981', '#10b981');
+              if (nodeEndApprove) {
+                nodeEndApprove.classList.add('pulse-node');
+                setTimeout(() => nodeEndApprove.classList.remove('pulse-node'), 800);
+              }
+              playSuccessSound();
+              setBpmnFeed(
+                '<i class="fa-solid fa-award text-emerald"></i>',
+                'Процесс успешно завершён: Кредит выдан!',
+                'Push-уведомление отправлено клиенту. Полное время исполнения BPMN: 42 секунды (вместо 5 дней AS-IS).',
+                'success'
+              );
+            } else {
+              setTokenPosition(530, 155, '#f43f5e', '#f43f5e');
+              if (nodeEndReject) {
+                nodeEndReject.classList.add('pulse-node');
+                setTimeout(() => nodeEndReject.classList.remove('pulse-node'), 800);
+              }
+              playTone(220, 'sawtooth', 0.16, 0.04);
+              setBpmnFeed(
+                '<i class="fa-solid fa-ban text-rose"></i>',
+                'Процесс завершён: Заявка отклонена',
+                'Клиент получил разъяснение в мобильном приложении. Ни одного часа сотрудника банка не затрачено.',
+                'danger'
+              );
+            }
+
+            // Next cycle if auto-mode
+            if (bpmnAutoMode) {
+              bpmnTimer = setTimeout(() => {
+                bpmnScenarioIndex = (bpmnScenarioIndex + 1) % 2;
+                runBpmnScenario(bpmnScenarioIndex === 0 ? 'approve' : 'reject');
+              }, 3200);
+            }
+          }, 1200);
+        }, 1200);
+      }, 1200);
+    }, 900);
+  }
+
+  function startBpmnSimulation() {
+    bpmnAutoMode = true;
+    const btnAuto = document.getElementById('bpmn-btn-auto');
+    if (btnAuto) btnAuto.classList.add('active');
+    runBpmnScenario(bpmnScenarioIndex === 0 ? 'approve' : 'reject');
+  }
+
+  function pauseBpmnSimulation() {
+    if (bpmnTimer) {
+      clearTimeout(bpmnTimer);
+      bpmnTimer = null;
+    }
+  }
+
+  function initBpmnSimulator() {
+    const btnApprove = document.getElementById('bpmn-btn-approve');
+    const btnReject = document.getElementById('bpmn-btn-reject');
+    const btnAuto = document.getElementById('bpmn-btn-auto');
+
+    if (btnApprove) {
+      btnApprove.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        bpmnAutoMode = false;
+        if (btnAuto) btnAuto.classList.remove('active');
+        btnApprove.classList.add('active');
+        if (btnReject) btnReject.classList.remove('active');
+        runBpmnScenario('approve');
+      });
+    }
+
+    if (btnReject) {
+      btnReject.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        bpmnAutoMode = false;
+        if (btnAuto) btnAuto.classList.remove('active');
+        btnReject.classList.add('active');
+        if (btnApprove) btnApprove.classList.remove('active');
+        runBpmnScenario('reject');
+      });
+    }
+
+    if (btnAuto) {
+      btnAuto.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        bpmnAutoMode = !bpmnAutoMode;
+        btnAuto.classList.toggle('active', bpmnAutoMode);
+        if (btnApprove) btnApprove.classList.remove('active');
+        if (btnReject) btnReject.classList.remove('active');
+        if (bpmnAutoMode) {
+          runBpmnScenario(bpmnScenarioIndex === 0 ? 'approve' : 'reject');
+        } else {
+          pauseBpmnSimulation();
+        }
+      });
+    }
+
+    // Touch on nodes triggers direct explanations
+    const nodeScoring = document.getElementById('node-scoring');
+    if (nodeScoring) {
+      nodeScoring.addEventListener('pointerdown', () => {
+        playTone(660, 'sine', 0.08, 0.04);
+        setBpmnFeed(
+          '<i class="fa-solid fa-gears text-cyan"></i>',
+          'Сервисная задача BPMN 2.0 (Service Task)',
+          'Автоматический вызов внешнего REST API скоринг-модели без участия человека.',
+          ''
+        );
+      });
+    }
+
+    const nodeGateway = document.getElementById('node-gateway');
+    if (nodeGateway) {
+      nodeGateway.addEventListener('pointerdown', () => {
+        playTone(740, 'triangle', 0.08, 0.04);
+        setBpmnFeed(
+          '<i class="fa-solid fa-diamond text-amber"></i>',
+          'Шлюз исключающего «ИЛИ» (Exclusive XOR Gateway)',
+          'Маршрутизирует процесс строго по одной из двух взаимоисключающих веток на основе условия.',
+          ''
+        );
+      });
+    }
+  }
+
+  // Interactive Kanban Card Mover
+  function initKanbanInteraction() {
+    const kanbanCards = document.querySelectorAll('.kanban-card');
+    kanbanCards.forEach(card => {
+      card.style.cursor = 'pointer';
+      card.setAttribute('title', 'Нажмите для перемещения задачи по колонкам');
+      card.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        const parentCol = card.closest('.kanban-col');
+        if (!parentCol) return;
+        
+        const allCols = Array.from(document.querySelectorAll('.kanban-col'));
+        const currentIndex = allCols.indexOf(parentCol);
+        const nextCol = allCols[(currentIndex + 1) % allCols.length];
+
+        if (nextCol) {
+          card.style.transform = 'scale(0.85) translateY(-8px)';
+          card.style.opacity = '0.5';
+          playTone(540 + currentIndex * 120, 'sine', 0.08, 0.04);
+
+          setTimeout(() => {
+            nextCol.appendChild(card);
+            card.style.transform = 'scale(1.05)';
+            card.style.opacity = '1';
+
+            if (nextCol === allCols[allCols.length - 1]) {
+              playSuccessSound();
+              card.style.borderColor = 'rgba(16, 185, 129, 0.8)';
+              card.style.boxShadow = '0 0 16px rgba(16, 185, 129, 0.4)';
+            } else {
+              card.style.borderColor = '';
+              card.style.boxShadow = '';
+            }
+
+            setTimeout(() => { card.style.transform = 'scale(1)'; }, 200);
+          }, 180);
+        }
+      });
+    });
+  }
+
+  // Interactive SDLC Steps (Slide 5)
+  function initSdlcInteraction() {
+    const sdlcSteps = document.querySelectorAll('.sdlc-step');
+    sdlcSteps.forEach((step, idx) => {
+      step.style.cursor = 'pointer';
+      step.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        sdlcSteps.forEach(s => s.classList.remove('active-step'));
+        step.classList.add('active-step');
+        playTone(480 + idx * 70, 'sine', 0.08, 0.04);
+        step.style.transform = 'scale(1.06) translateY(-4px)';
+        setTimeout(() => { step.style.transform = ''; }, 250);
+      });
+    });
+  }
+
+  // Interactive Widgets (Failover simulation, API click, BPMN, Kanban, SDLC)
   function initInteractiveWidgets() {
+    initBpmnSimulator();
+    initKanbanInteraction();
+    initSdlcInteraction();
     const failedNode = document.querySelector('.node-ha-box.failed');
     if (failedNode) {
       failedNode.addEventListener('pointerdown', (e) => {

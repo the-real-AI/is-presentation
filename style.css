@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    ПРОЕКТИРОВАНИЕ ИНФОРМАЦИОННЫХ СИСТЕМ - STYLESHEET
    Оптимизировано для сенсорных интерактивных досок (Smartboard), мыши и тач-экранов
    ========================================================================== */
@@ -1263,35 +1263,360 @@ html, body {
 }
 
 /* ==========================================================================
-   СЛАЙД 9: ДИАГРАММА BPMN 2.0 (С АНИМИРОВАННЫМ ТОКЕНОМ)
+   СЛАЙД 9: ИНТЕРАКТИВНЫЙ БИЗНЕС-ПРОЦЕСС BPMN 2.0
    ========================================================================== */
+.bpmn-interactive-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bpmn-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.bpmn-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.bpmn-btn:hover {
+  transform: translateY(-2px);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.bpmn-btn.success:hover, .bpmn-btn.success.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.6);
+  color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
+}
+
+.bpmn-btn.danger:hover, .bpmn-btn.danger.active {
+  background: rgba(244, 63, 94, 0.2);
+  border-color: rgba(244, 63, 94, 0.6);
+  color: #f43f5e;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
+}
+
+.bpmn-btn.auto.active {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: rgba(0, 242, 254, 0.5);
+  color: #00f2fe;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+}
+
 .bpmn-diagram-canvas {
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 14px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.85), rgba(6, 8, 13, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 10px;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.7);
 }
 
 .bpmn-svg {
   width: 100%;
   height: auto;
-  max-width: 540px;
+  display: block;
 }
 
-.bpmn-token {
-  animation: bpmn-token-travel 4s infinite linear;
+/* Wires */
+.bpmn-wire.base-wire {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 2;
+  fill: none;
 }
 
-@keyframes bpmn-token-travel {
-  0% { transform: translate(30px, 45px); opacity: 0; }
-  10% { opacity: 1; }
-  35% { transform: translate(140px, 45px); }
-  65% { transform: translate(270px, 45px); }
-  90% { transform: translate(430px, 45px); opacity: 1; }
-  100% { transform: translate(460px, 45px); opacity: 0; }
+.bpmn-wire.flow-wire {
+  stroke: rgba(0, 242, 254, 0.45);
+  stroke-width: 2.2;
+  fill: none;
+  stroke-dasharray: 6 6;
+  animation: bpmn-wire-dash 1.2s linear infinite;
+}
+
+.bpmn-wire.branch-approve {
+  stroke: rgba(16, 185, 129, 0.45);
+}
+
+.bpmn-wire.branch-reject {
+  stroke: rgba(244, 63, 94, 0.45);
+}
+
+.bpmn-wire.flow-active {
+  stroke-width: 3.5 !important;
+  stroke-dasharray: 8 4 !important;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+@keyframes bpmn-wire-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* Nodes */
+.bpmn-node {
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+}
+
+.bpmn-node:hover {
+  filter: brightness(1.25);
+}
+
+.bpmn-node.pulse-node {
+  animation: bpmn-node-halo 0.8s ease;
+}
+
+@keyframes bpmn-node-halo {
+  0% { filter: drop-shadow(0 0 2px #00f2fe); }
+  50% { filter: drop-shadow(0 0 20px #00f2fe) brightness(1.3); }
+  100% { filter: drop-shadow(0 0 6px #00f2fe); }
+}
+
+.bpmn-start-outer {
+  fill: #064e3b;
+  stroke: #10b981;
+  stroke-width: 3;
+}
+.bpmn-start-inner { fill: #022c22; }
+
+.bpmn-task-rect {
+  fill: #0f172a;
+  stroke: #00f2fe;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.bpmn-task-title {
+  fill: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.bpmn-task-sub {
+  fill: #38bdf8;
+  font-size: 8px;
+  font-family: var(--font-sans);
+}
+
+.bpmn-gateway-poly {
+  fill: #1e1b4b;
+  stroke: #f59e0b;
+  stroke-width: 2.5;
+  transition: all 0.3s ease;
+}
+
+.bpmn-gateway-x {
+  fill: #f59e0b;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: var(--font-sans);
+}
+
+.bpmn-task-approve {
+  fill: #064e3b;
+  stroke: #10b981;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.bpmn-task-title-green {
+  fill: #a7f3d0;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.bpmn-task-sub-green {
+  fill: #6ee7b7;
+  font-size: 8px;
+  font-family: var(--font-sans);
+}
+
+.bpmn-end-outer-green {
+  fill: #064e3b;
+  stroke: #10b981;
+  stroke-width: 4;
+}
+.bpmn-end-inner-green { fill: #022c22; }
+
+.bpmn-task-reject {
+  fill: #4c0519;
+  stroke: #f43f5e;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.bpmn-task-title-red {
+  fill: #fecdd3;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.bpmn-task-sub-red {
+  fill: #fda4af;
+  font-size: 8px;
+  font-family: var(--font-sans);
+}
+
+.bpmn-end-outer-red {
+  fill: #4c0519;
+  stroke: #f43f5e;
+  stroke-width: 4;
+}
+.bpmn-end-inner-red { fill: #1f0208; }
+
+.bpmn-label {
+  fill: #f1f5f9;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.bpmn-sublabel {
+  fill: #94a3b8;
+  font-size: 7.5px;
+  font-family: var(--font-sans);
+}
+
+.bpmn-label-green {
+  fill: #10b981;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+.bpmn-label-red {
+  fill: #f43f5e;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+/* Tokens */
+.token-glow {
+  fill: rgba(0, 242, 254, 0.45);
+  filter: url(#glow-cyan);
+  animation: token-pulsate 0.8s infinite alternate;
+}
+
+.token-core {
+  fill: #00f2fe;
+}
+
+.token-approved .token-glow {
+  fill: rgba(16, 185, 129, 0.6);
+  filter: url(#glow-green);
+}
+
+.token-approved .token-core {
+  fill: #10b981;
+}
+
+.token-rejected .token-glow {
+  fill: rgba(244, 63, 94, 0.6);
+  filter: url(#glow-red);
+}
+
+.token-rejected .token-core {
+  fill: #f43f5e;
+}
+
+@keyframes token-pulsate {
+  0% { r: 9; opacity: 0.6; }
+  100% { r: 15; opacity: 1; }
+}
+
+/* Live Feed / Status Bar */
+.bpmn-live-feed {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 12px;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.35s ease;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.bpmn-live-feed.status-success {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(6, 78, 59, 0.25);
+  box-shadow: 0 4px 25px rgba(16, 185, 129, 0.2);
+}
+
+.bpmn-live-feed.status-danger {
+  border-color: rgba(244, 63, 94, 0.6);
+  background: rgba(76, 5, 25, 0.25);
+  box-shadow: 0 4px 25px rgba(244, 63, 94, 0.2);
+}
+
+.live-feed-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 242, 254, 0.15);
+  color: #00f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.bpmn-live-feed.status-success .live-feed-icon {
+  background: rgba(16, 185, 129, 0.25);
+  color: #10b981;
+}
+
+.bpmn-live-feed.status-danger .live-feed-icon {
+  background: rgba(244, 63, 94, 0.25);
+  color: #f43f5e;
+}
+
+.live-feed-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.live-feed-step {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.live-feed-desc {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  line-height: 1.35;
 }
 
 /* ==========================================================================
@@ -2261,4 +2586,78 @@ html, body {
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .conclusions-grid { grid-template-columns: repeat(2, 1fr); }
   .dock-slide-list { display: none; }
+}
+
+/* ==========================================================================
+   ENHANCED GLOBAL ANIMATIONS & PERFORMANCE OPTIMIZATIONS
+   ========================================================================== */
+.card-glass, .visual-diagram-card, .plan-card, .kanban-card, .sdlc-step {
+  will-change: transform;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.card-glass:hover, .visual-diagram-card:hover {
+  border-color: rgba(0, 242, 254, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 242, 254, 0.12);
+}
+
+.kanban-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.kanban-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(0, 242, 254, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 242, 254, 0.15);
+}
+
+.sdlc-step:hover {
+  transform: translateY(-4px) scale(1.03);
+  border-color: rgba(0, 242, 254, 0.5);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 242, 254, 0.25);
+}
+
+.sdlc-icon {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+.sdlc-step:hover .sdlc-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.cicd-node {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.cicd-node:hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 14px rgba(16, 185, 129, 0.2);
+}
+
+.sys-part-item {
+  transition: transform 0.22s ease, background-color 0.22s ease;
+}
+
+.sys-part-item:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.stat-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(0, 242, 254, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 242, 254, 0.2);
+}
+
+@keyframes pulse-wire {
+  0% { stroke-opacity: 0.3; }
+  50% { stroke-opacity: 1; filter: drop-shadow(0 0 4px #00f2fe); }
+  100% { stroke-opacity: 0.3; }
 }
