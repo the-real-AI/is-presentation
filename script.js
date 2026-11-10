@@ -1,6 +1,7 @@
 /**
  * ПРОЕКТИРОВАНИЕ ИНФОРМАЦИОННЫХ СИСТЕМ
- * Презентационный движок с расширенными анимациями, счетчиками и эффектами
+ * Презентационный движок, оптимизированный для сенсорных интерактивных досок (Smartboard)
+ * Поддержка: мультитач, свайпы, лазерная указка/маркер, мгновенный отклик на касания
  */
 
 const Presentation = (() => {
@@ -11,6 +12,7 @@ const Presentation = (() => {
   let timerSeconds = 0;
   let timerInterval = null;
   let isFullscreen = false;
+  let laserMode = false;
 
   // DOM Elements
   const slides = document.querySelectorAll('.slide');
@@ -21,6 +23,11 @@ const Presentation = (() => {
   const timerBadge = document.getElementById('presentation-timer');
   const btnSound = document.getElementById('btn-sound');
   const btnFullscreen = document.getElementById('btn-fullscreen');
+  const btnLaser = document.getElementById('btn-laser');
+
+  // Smartboard Side Touch Buttons
+  const sbNavPrev = document.getElementById('sb-nav-prev');
+  const sbNavNext = document.getElementById('sb-nav-next');
 
   // Modals
   const modalOverview = document.getElementById('modal-overview');
@@ -88,7 +95,7 @@ const Presentation = (() => {
     }, 1000);
   }
 
-  // Populate Dock Dots (1 to 26)
+  // Populate Dock Dots (1 to 26) with large touch targets
   function initDockDots() {
     if (!dockDotsContainer) return;
     dockDotsContainer.innerHTML = '';
@@ -96,9 +103,14 @@ const Presentation = (() => {
       const dot = document.createElement('button');
       dot.className = `dock-dot ${i === 1 ? 'active' : ''}`;
       dot.setAttribute('data-target-slide', i);
-      dot.setAttribute('title', `Перейти к слайду ${i}`);
+      dot.setAttribute('title', `Слайд ${i}`);
       dot.textContent = i;
-      dot.addEventListener('click', () => goToSlide(i));
+      
+      // Fast touch trigger without delay
+      dot.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        goToSlide(i);
+      });
       dockDotsContainer.appendChild(dot);
     }
   }
@@ -117,7 +129,7 @@ const Presentation = (() => {
         <div class="thumb-num">СЛАЙД ${String(num).padStart(2, '0')}</div>
         <div class="thumb-title">${topic}</div>
       `;
-      card.addEventListener('click', () => {
+      card.addEventListener('pointerdown', () => {
         goToSlide(num);
         toggleOverviewModal(false);
       });
@@ -135,7 +147,6 @@ const Presentation = (() => {
         counter.setAttribute('data-original-val', originalText);
       }
 
-      // Check if it's purely a number or percentage
       const match = originalText.match(/^([<>]?\s*)?(\d+([.,]\d+)?)(.*)$/);
       if (match) {
         const prefix = match[1] || '';
@@ -202,7 +213,7 @@ const Presentation = (() => {
       confettiParticles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.45; // gravity
+        p.vy += 0.45;
         p.rotation += p.rotSpeed;
         p.opacity -= 0.009;
 
@@ -255,7 +266,6 @@ const Presentation = (() => {
     playSlideSound();
     updateUI();
 
-    // Trigger celebration when reaching Slide 26
     if (currentSlide === 26) {
       playSuccessSound();
       launchConfetti();
@@ -278,26 +288,22 @@ const Presentation = (() => {
 
   // Update Top Bar & Dock UI
   function updateUI() {
-    // Counter
     if (counterCurrent) {
       counterCurrent.textContent = String(currentSlide).padStart(2, '0');
-      counterCurrent.style.transform = 'scale(1.3)';
+      counterCurrent.style.transform = 'scale(1.25)';
       setTimeout(() => { counterCurrent.style.transform = 'scale(1)'; }, 200);
     }
 
-    // Active slide topic
     const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
     if (activeSlide && topicTitle) {
       topicTitle.textContent = activeSlide.getAttribute('data-topic') || '';
     }
 
-    // Progress bar
     if (progressBarFill) {
       const pct = (currentSlide / totalSlides) * 100;
       progressBarFill.style.width = `${pct}%`;
     }
 
-    // Dock dots
     const dots = document.querySelectorAll('.dock-dot');
     dots.forEach((dot, idx) => {
       const slideNum = idx + 1;
@@ -310,7 +316,6 @@ const Presentation = (() => {
       }
     });
 
-    // Overview modal active thumb
     const thumbs = document.querySelectorAll('.thumb-card');
     thumbs.forEach((thumb, idx) => {
       thumb.classList.toggle('active', idx + 1 === currentSlide);
@@ -383,6 +388,79 @@ const Presentation = (() => {
     if (soundEnabled) playSuccessSound();
   }
 
+  // Laser Pointer / Touch Pen Mode for Interactive Whiteboard
+  function toggleLaserMode() {
+    laserMode = !laserMode;
+    if (btnLaser) {
+      btnLaser.classList.toggle('active-tool', laserMode);
+    }
+    playTone(laserMode ? 880 : 440, 'triangle', 0.1, 0.05);
+  }
+
+  let laserTrail = [];
+  function initLaserPointer() {
+    const canvas = document.getElementById('laser-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    function addLaserPoint(x, y) {
+      laserTrail.push({
+        x,
+        y,
+        life: 1.0,
+        radius: 8
+      });
+    }
+
+    // Touch / Pointer drawing on whiteboard
+    window.addEventListener('pointermove', (e) => {
+      if (laserMode && e.buttons > 0) {
+        addLaserPoint(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener('pointerdown', (e) => {
+      if (laserMode) {
+        addLaserPoint(e.clientX, e.clientY);
+      }
+    });
+
+    function renderLaser() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (laserTrail.length > 0) {
+        for (let i = laserTrail.length - 1; i >= 0; i--) {
+          const pt = laserTrail[i];
+          pt.life -= 0.025; // fade over ~1 sec
+
+          if (pt.life <= 0) {
+            laserTrail.splice(i, 1);
+          } else {
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#00f2fe';
+            ctx.fillStyle = `rgba(0, 242, 254, ${pt.life})`;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, pt.radius * pt.life, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      requestAnimationFrame(renderLaser);
+    }
+
+    renderLaser();
+  }
+
   // Keyboard navigation
   function setupKeyboard() {
     window.addEventListener('keydown', (e) => {
@@ -434,6 +512,13 @@ const Presentation = (() => {
           toggleSound();
           break;
 
+        case 'l':
+        case 'L':
+        case 'д':
+        case 'Д':
+          toggleLaserMode();
+          break;
+
         case '?':
           toggleHelpModal();
           break;
@@ -445,27 +530,39 @@ const Presentation = (() => {
     });
   }
 
-  // Touch Swipe for Mobile / Tablets
-  function setupTouchSwipes() {
+  // Smartboard Touch Gestures (Swipe & Edge Taps)
+  function setupSmartboardTouch() {
     let touchStartX = 0;
-    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
     const minSwipeDistance = 50;
 
     window.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const diff = touchEndX - touchStartX;
-      if (Math.abs(diff) > minSwipeDistance) {
-        if (diff < 0) nextSlide();
-        else prevSlide();
+      if (e.changedTouches.length === 1) {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        const elapsed = Date.now() - touchStartTime;
+
+        // Check horizontal swipe
+        if (Math.abs(diffX) > minSwipeDistance && Math.abs(diffX) > Math.abs(diffY) * 1.5 && elapsed < 600) {
+          if (diffX < 0) nextSlide(); // Swipe Left -> Next
+          else prevSlide(); // Swipe Right -> Prev
+        }
       }
     }, { passive: true });
   }
 
-  // Interactive Background Canvas with Shockwave on Click
+  // Interactive Background Canvas with Shockwaves
   let shockwaves = [];
 
   function initCanvasAnimation() {
@@ -481,13 +578,13 @@ const Presentation = (() => {
       height = canvas.height = window.innerHeight;
     });
 
-    window.addEventListener('click', (e) => {
+    window.addEventListener('pointerdown', (e) => {
       shockwaves.push({
         x: e.clientX,
         y: e.clientY,
-        radius: 5,
-        maxRadius: 100,
-        opacity: 0.6
+        radius: 6,
+        maxRadius: 110,
+        opacity: 0.65
       });
     });
 
@@ -511,8 +608,8 @@ const Presentation = (() => {
       // Draw shockwaves
       for (let s = shockwaves.length - 1; s >= 0; s--) {
         const sw = shockwaves[s];
-        sw.radius += 3.5;
-        sw.opacity -= 0.02;
+        sw.radius += 4;
+        sw.opacity -= 0.022;
 
         if (sw.opacity <= 0 || sw.radius >= sw.maxRadius) {
           shockwaves.splice(s, 1);
@@ -544,7 +641,7 @@ const Presentation = (() => {
         }
       }
 
-      // Draw and update particles
+      // Draw particles
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
@@ -566,14 +663,12 @@ const Presentation = (() => {
     animate();
   }
 
-  // Interactive Diagram Click Listeners (Failover, Swagger, Kanban)
+  // Interactive Widgets (Failover simulation & API click)
   function initInteractiveWidgets() {
-    // Slide 19: Failover node click
     const failedNode = document.querySelector('.node-ha-box.failed');
     if (failedNode) {
-      failedNode.style.cursor = 'pointer';
-      failedNode.setAttribute('title', 'Нажмите для симуляции перезапуска сервера!');
-      failedNode.addEventListener('click', () => {
+      failedNode.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
         if (failedNode.classList.contains('failed')) {
           failedNode.classList.remove('failed');
           failedNode.classList.add('healthy');
@@ -592,16 +687,14 @@ const Presentation = (() => {
       });
     }
 
-    // Slide 17: Swagger POST click
     const swaggerHeader = document.querySelector('.swagger-header-bar');
     if (swaggerHeader) {
-      swaggerHeader.style.cursor = 'pointer';
-      swaggerHeader.setAttribute('title', 'Нажмите для симуляции вызова API!');
-      swaggerHeader.addEventListener('click', () => {
+      swaggerHeader.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
         const bodyCode = document.querySelector('.swagger-body-code');
         if (bodyCode) {
           bodyCode.style.transition = 'background 0.3s ease';
-          bodyCode.style.background = 'rgba(16, 185, 129, 0.15)';
+          bodyCode.style.background = 'rgba(16, 185, 129, 0.2)';
           playTone(660, 'sine', 0.08, 0.04);
           setTimeout(() => {
             bodyCode.style.background = '#090e17';
@@ -613,29 +706,37 @@ const Presentation = (() => {
 
   // Setup Event Listeners
   function initListeners() {
+    // Dock Buttons
     const btnPrev = document.getElementById('dock-btn-prev');
     const btnNext = document.getElementById('dock-btn-next');
-    if (btnPrev) btnPrev.addEventListener('click', prevSlide);
-    if (btnNext) btnNext.addEventListener('click', nextSlide);
+    if (btnPrev) btnPrev.addEventListener('pointerdown', (e) => { e.preventDefault(); prevSlide(); });
+    if (btnNext) btnNext.addEventListener('pointerdown', (e) => { e.preventDefault(); nextSlide(); });
 
-    if (btnSound) btnSound.addEventListener('click', toggleSound);
-    if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
+    // Floating Smartboard Side Touch Buttons
+    if (sbNavPrev) sbNavPrev.addEventListener('pointerdown', (e) => { e.preventDefault(); prevSlide(); });
+    if (sbNavNext) sbNavNext.addEventListener('pointerdown', (e) => { e.preventDefault(); nextSlide(); });
+
+    // Header buttons
+    if (btnSound) btnSound.addEventListener('pointerdown', toggleSound);
+    if (btnFullscreen) btnFullscreen.addEventListener('pointerdown', toggleFullscreen);
+    if (btnLaser) btnLaser.addEventListener('pointerdown', toggleLaserMode);
 
     const btnOverview = document.getElementById('btn-overview');
-    if (btnOverview) btnOverview.addEventListener('click', () => toggleOverviewModal());
+    if (btnOverview) btnOverview.addEventListener('pointerdown', () => toggleOverviewModal());
 
     const btnVideo = document.getElementById('btn-video');
-    if (btnVideo) btnVideo.addEventListener('click', () => toggleVideoModal());
+    if (btnVideo) btnVideo.addEventListener('pointerdown', () => toggleVideoModal());
 
     const btnHelp = document.getElementById('btn-help');
-    if (btnHelp) btnHelp.addEventListener('click', () => toggleHelpModal());
+    if (btnHelp) btnHelp.addEventListener('pointerdown', () => toggleHelpModal());
 
     const btnDeploy = document.getElementById('btn-deploy');
-    if (btnDeploy) btnDeploy.addEventListener('click', () => toggleDeployModal());
+    if (btnDeploy) btnDeploy.addEventListener('pointerdown', () => toggleDeployModal());
 
+    // Close modals on touch outside
     [modalOverview, modalVideo, modalDeploy, modalHelp].forEach(m => {
       if (m) {
-        m.addEventListener('click', (e) => {
+        m.addEventListener('pointerdown', (e) => {
           if (e.target === m) closeAllModals();
         });
       }
@@ -647,9 +748,10 @@ const Presentation = (() => {
     initDockDots();
     initThumbnailGrid();
     setupKeyboard();
-    setupTouchSwipes();
+    setupSmartboardTouch();
     initListeners();
     initCanvasAnimation();
+    initLaserPointer();
     initInteractiveWidgets();
     startTimer();
     updateUI();
@@ -664,7 +766,8 @@ const Presentation = (() => {
     toggleVideoModal,
     toggleDeployModal,
     openDeployModal: () => toggleDeployModal(true),
-    toggleHelpModal
+    toggleHelpModal,
+    toggleLaserMode
   };
 })();
 

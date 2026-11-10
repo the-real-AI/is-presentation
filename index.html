@@ -18,6 +18,16 @@
 
   <!-- Dynamic Network Canvas Background -->
   <canvas id="bg-canvas"></canvas>
+  <!-- Laser Pointer / Touch Trail Canvas for Interactive Smartboard -->
+  <canvas id="laser-canvas"></canvas>
+
+  <!-- Floating Smartboard Side Touch Navigation (For Speaker Standing at Board) -->
+  <button class="smartboard-touch-nav prev" id="sb-nav-prev" title="Предыдущий слайд (Касание пальцем или стилусом)">
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+  <button class="smartboard-touch-nav next" id="sb-nav-next" title="Следующий слайд (Касание пальцем или стилусом)">
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
 
   <!-- Top Navigation & Controls Bar -->
   <header class="top-nav">
@@ -46,6 +56,9 @@
       </div>
 
       <!-- Control Buttons -->
+      <button class="nav-btn" id="btn-laser" title="Интерактивная лазерная указка / маркер (Для сенсорной доски)">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </button>
       <button class="nav-btn" id="btn-sound" title="Вкл/Выкл звук эффектов">
         <i class="fa-solid fa-volume-high"></i>
       </button>
