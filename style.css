@@ -42,14 +42,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #07090e;
-  background-image: 
-    radial-gradient(circle at 50% 12%, rgba(0, 242, 254, 0.05) 0%, transparent 65%),
-    radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.04) 0%, transparent 55%),
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
-  background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+  background-color: var(--bg-primary);
   color: var(--text-main);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -59,9 +52,16 @@ html, body {
   -webkit-user-select: none;
 }
 
-/* Background Canvas completely disabled for zero CPU/GPU overhead */
+/* Background Interactive Canvas */
 #bg-canvas {
-  display: none !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.75;
 }
 
 /* Laser Pointer Canvas for Interactive Board */
@@ -119,11 +119,11 @@ html, body {
 }
 
 /* ==========================================================================
-   GLOBAL KEYFRAME ANIMATIONS (OPTIMIZED: ZERO CONTINUOUS HEAVY GPU REPAINTS)
+   GLOBAL KEYFRAME ANIMATIONS
    ========================================================================== */
 @keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.75; }
+  0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 8px var(--accent-cyan)); }
+  50% { transform: scale(1.08); opacity: 0.7; filter: drop-shadow(0 0 16px var(--accent-cyan)); }
 }
 
 @keyframes spin-clockwise {
@@ -138,12 +138,13 @@ html, body {
 
 @keyframes float-gentle {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-7px); }
 }
 
 @keyframes flow-horizontal {
   0% { transform: translateX(0); opacity: 0; }
-  50% { opacity: 1; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
   100% { transform: translateX(180px); opacity: 0; }
 }
 
@@ -151,22 +152,45 @@ html, body {
   to { stroke-dashoffset: -40; }
 }
 
+@keyframes scanline-glow {
+  0% { top: -20%; opacity: 0; }
+  30% { opacity: 0.6; }
+  70% { opacity: 0.6; }
+  100% { top: 120%; opacity: 0; }
+}
+
+@keyframes border-gradient-shift {
+  0% { border-color: rgba(0, 242, 254, 0.4); }
+  50% { border-color: rgba(99, 102, 241, 0.4); }
+  100% { border-color: rgba(0, 242, 254, 0.4); }
+}
+
 @keyframes slide-in-up {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pop-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* Slide Entrance Animations: Instant rendering without staggered layout churn */
-.slide.active .card-glass,
-.slide.active .visual-diagram-card,
-.slide.active .example-box {
-  animation: none !important;
+@keyframes ripple-pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.6); }
+  70% { transform: scale(1); box-shadow: 0 0 0 18px rgba(0, 242, 254, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
 }
+
+/* Slide Entrance Animations */
+.slide.active .card-glass,
+.slide.active .visual-diagram-card {
+  animation: slide-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.slide.active .card-glass:nth-child(1) { animation-delay: 0.05s; }
+.slide.active .card-glass:nth-child(2) { animation-delay: 0.15s; }
+.slide.active .visual-diagram-card { animation-delay: 0.2s; }
+.slide.active .example-box { animation: pop-in 0.5s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
 /* ==========================================================================
    TOP NAVIGATION
@@ -377,21 +401,32 @@ html, body {
   width: 100%;
   height: 100%;
   padding: 16px 70px; /* Отступ по краям для боковых кнопок доски */
-  display: none !important;
+  display: none;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(35px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
   pointer-events: none;
-  contain: strict;
+  contain: layout style;
 }
 
 .slide.active {
   display: flex !important;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
   pointer-events: auto;
-  z-index: 2;
+}
+
+.slide.slide-prev {
+  display: flex !important;
+  transform: translateX(-35px);
 }
 
 .slide:not(.active) * {
-  animation: none !important;
+  animation-play-state: paused !important;
 }
 
 .slide-inner {
@@ -564,6 +599,7 @@ html, body {
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  animation: scanline-glow 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -597,6 +633,8 @@ html, body {
   height: 7px;
   border-radius: 50%;
   background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  animation: pulse-glow 1.5s infinite;
 }
 
 /* ==========================================================================
@@ -759,9 +797,21 @@ html, body {
   width: 100%;
   max-width: 320px;
   height: auto;
+  filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.4));
 }
 
-.globe-ring-1, .globe-ring-2, .globe-core-pulse {
+.globe-ring-1 {
+  animation: spin-clockwise 18s linear infinite;
+  transform-origin: center;
+}
+
+.globe-ring-2 {
+  animation: spin-counter 24s linear infinite;
+  transform-origin: center;
+}
+
+.globe-core-pulse {
+  animation: pulse-glow 2.5s infinite ease-in-out;
   transform-origin: center;
 }
 
@@ -1312,13 +1362,20 @@ html, body {
 
 .bpmn-wire.flow-active {
   stroke-width: 3.5 !important;
-  stroke: #00f2fe !important;
+  stroke-dasharray: 8 4 !important;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+@keyframes bpmn-wire-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
 }
 
 /* Nodes */
 .bpmn-node {
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
 }
 
 .bpmn-node:hover {
@@ -1326,7 +1383,13 @@ html, body {
 }
 
 .bpmn-node.pulse-node {
-  transform: scale(1.04);
+  animation: bpmn-node-halo 0.8s ease;
+}
+
+@keyframes bpmn-node-halo {
+  0% { filter: drop-shadow(0 0 2px #00f2fe); }
+  50% { filter: drop-shadow(0 0 20px #00f2fe) brightness(1.3); }
+  100% { filter: drop-shadow(0 0 6px #00f2fe); }
 }
 
 .bpmn-start-outer {
@@ -1453,7 +1516,9 @@ html, body {
 
 /* Tokens */
 .token-glow {
-  fill: rgba(0, 242, 254, 0.4);
+  fill: rgba(0, 242, 254, 0.45);
+  filter: url(#glow-cyan);
+  animation: token-pulsate 0.8s infinite alternate;
 }
 
 .token-core {
@@ -1461,7 +1526,8 @@ html, body {
 }
 
 .token-approved .token-glow {
-  fill: rgba(16, 185, 129, 0.4);
+  fill: rgba(16, 185, 129, 0.6);
+  filter: url(#glow-green);
 }
 
 .token-approved .token-core {
@@ -1469,11 +1535,17 @@ html, body {
 }
 
 .token-rejected .token-glow {
-  fill: rgba(244, 63, 94, 0.4);
+  fill: rgba(244, 63, 94, 0.6);
+  filter: url(#glow-red);
 }
 
 .token-rejected .token-core {
   fill: #f43f5e;
+}
+
+@keyframes token-pulsate {
+  0% { r: 9; opacity: 0.6; }
+  100% { r: 15; opacity: 1; }
 }
 
 /* Live Feed / Status Bar */
@@ -2581,33 +2653,8 @@ html, body {
 
 @keyframes pulse-wire {
   0% { stroke-opacity: 0.3; }
-  50% { stroke-opacity: 1; }
+  50% { stroke-opacity: 1; filter: drop-shadow(0 0 4px #00f2fe); }
   100% { stroke-opacity: 0.3; }
-}
-
-/* Global Animation Disabler for Smooth 60FPS on Smartboards */
-.pulse-dot,
-.timer-badge i,
-.pulse-button,
-.path-packet-flow,
-.boehm-curve-line,
-.boehm-dot,
-.sdlc-connector,
-.v-arrow-link i,
-.kanban-card.active-ticket,
-.bpmn-wire,
-.bpmn-wire.flow-active,
-.api-bus-header,
-.security-shield-center i,
-.cicd-arrow i,
-.cloud-pulse-icon,
-.dist-svc-card,
-.ha-node-box,
-.wire-dash,
-.cicd-wire,
-.ha-flow-line,
-.cloud-wire-flow {
-  animation: none !important;
 }
 
 /* ==========================================================================

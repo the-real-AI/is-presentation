@@ -13,7 +13,7 @@ const Presentation = (() => {
   let timerInterval = null;
   let isFullscreen = false;
   let laserMode = false;
-  let perfMode = localStorage.getItem('is_presentation_perf_mode') === null ? true : (localStorage.getItem('is_presentation_perf_mode') === 'true');
+  let perfMode = localStorage.getItem('is_presentation_perf_mode') === 'true';
 
   // DOM Elements
   const slides = document.querySelectorAll('.slide');
@@ -139,13 +139,43 @@ const Presentation = (() => {
     });
   }
 
-  // Number values (Instant zero-lag render without CPU intervals)
+  // Animated Numbers Counter for Active Slide
   function triggerNumberCounters(slideEl) {
     if (!slideEl) return;
     const counters = slideEl.querySelectorAll('.stat-val, .res-item strong');
     counters.forEach(counter => {
       const originalText = counter.getAttribute('data-original-val') || counter.textContent.trim();
-      counter.textContent = originalText;
+      if (!counter.hasAttribute('data-original-val')) {
+        counter.setAttribute('data-original-val', originalText);
+      }
+
+      const match = originalText.match(/^([<>]?\s*)?(\d+([.,]\d+)?)(.*)$/);
+      if (match) {
+        const prefix = match[1] || '';
+        const targetNum = parseFloat(match[2].replace(',', '.'));
+        const suffix = match[4] || '';
+
+        if (!isNaN(targetNum) && targetNum > 0) {
+          let current = 0;
+          const duration = 600;
+          const steps = 20;
+          const increment = targetNum / steps;
+          const stepTime = duration / steps;
+
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= targetNum) {
+              counter.textContent = originalText;
+              clearInterval(timer);
+            } else {
+              const displayVal = Number.isInteger(targetNum) 
+                ? Math.floor(current) 
+                : current.toFixed(2);
+              counter.textContent = `${prefix}${displayVal}${suffix}`;
+            }
+          }, stepTime);
+        }
+      }
     });
   }
 
@@ -226,19 +256,27 @@ const Presentation = (() => {
     confettiAnimFrame = requestAnimationFrame(animateConfetti);
   }
 
-  // Go to slide (Instant zero-lag switch, only 1 slide rendered at any time)
+  // Go to slide
   function goToSlide(targetSlide) {
     if (targetSlide < 1 || targetSlide > totalSlides) return;
     if (targetSlide === currentSlide) return;
 
-    // Reset ALL slides to guarantee zero DOM leaks and no hidden slide rendering
-    for (let i = 0; i < slides.length; i++) {
-      slides[i].classList.remove('active', 'slide-prev');
+    const prevSlideEl = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+    const nextSlideEl = document.querySelector(`.slide[data-slide="${targetSlide}"]`);
+
+    if (prevSlideEl) {
+      prevSlideEl.classList.remove('active');
+      if (targetSlide > currentSlide) {
+        prevSlideEl.classList.add('slide-prev');
+      } else {
+        prevSlideEl.classList.remove('slide-prev');
+      }
     }
 
-    const nextSlideEl = document.querySelector(`.slide[data-slide="${targetSlide}"]`);
     if (nextSlideEl) {
+      nextSlideEl.classList.remove('slide-prev');
       nextSlideEl.classList.add('active');
+      triggerNumberCounters(nextSlideEl);
     }
 
     currentSlide = targetSlide;
@@ -426,14 +464,36 @@ const Presentation = (() => {
     }
   }
 
-  function initPerformance() {
-    if (perfMode) {
-      document.body.classList.add('perf-mode');
-      if (btnPerf) {
-        btnPerf.classList.add('active-tool');
-        btnPerf.title = 'Турбо-режим ВКЛЮЧЕН (Нажмите для обычного)';
+  function initFpsDetector() {
+    // If explicitly stored in localStorage, apply
+    if (localStorage.getItem('is_presentation_perf_mode') !== null) {
+      if (perfMode) {
+        document.body.classList.add('perf-mode');
+        if (btnPerf) btnPerf.classList.add('active-tool');
       }
+      return;
     }
+
+    // Auto-detect FPS on startup
+    let frameCount = 0;
+    let startTime = performance.now();
+    let completed = false;
+
+    function checkFps(time) {
+      if (completed) return;
+      frameCount++;
+      const elapsed = time - startTime;
+      if (elapsed >= 2200) {
+        completed = true;
+        const fps = (frameCount * 1000) / elapsed;
+        if (fps < 32) {
+          togglePerfMode(true, true);
+        }
+        return;
+      }
+      requestAnimationFrame(checkFps);
+    }
+    requestAnimationFrame(checkFps);
   }
 
   let laserTrail = [];
@@ -615,12 +675,127 @@ const Presentation = (() => {
     }, { passive: true });
   }
 
-  // Background Canvas: Disabled for zero CPU/GPU overhead on all devices
+  // Interactive Background Canvas with Shockwaves (Lightweight & Throttled)
+  let shockwaves = [];
+
   function initCanvasAnimation() {
     const canvas = document.getElementById('bg-canvas');
-    if (canvas) {
-      canvas.style.display = 'none';
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('pointerdown', (e) => {
+      if (perfMode) return;
+      if (shockwaves.length < 4) {
+        shockwaves.push({
+          x: e.clientX,
+          y: e.clientY,
+          radius: 6,
+          maxRadius: 90,
+          opacity: 0.55
+        });
+      }
+    });
+
+    const particles = [];
+    // 22 particles is visually great and takes virtually zero CPU/GPU
+    const count = 22;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        radius: Math.random() * 1.5 + 1,
+        color: Math.random() > 0.4 ? 'rgba(0, 242, 254, ' : 'rgba(99, 102, 241, '
+      });
     }
+
+    let lastFrameTime = 0;
+    const FRAME_DELAY = 1000 / 30; // Throttle to 30 FPS
+
+    function animate(currentTime) {
+      if (perfMode) {
+        // Skip canvas calculation completely in perf mode
+        requestAnimationFrame(animate);
+        return;
+      }
+
+      if (currentTime - lastFrameTime < FRAME_DELAY) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime = currentTime;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw shockwaves
+      for (let s = shockwaves.length - 1; s >= 0; s--) {
+        const sw = shockwaves[s];
+        sw.radius += 3.5;
+        sw.opacity -= 0.025;
+
+        if (sw.opacity <= 0 || sw.radius >= sw.maxRadius) {
+          shockwaves.splice(s, 1);
+        } else {
+          ctx.strokeStyle = `rgba(0, 242, 254, ${sw.opacity})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // Draw all connections in a SINGLE batch stroke (zero draw call overhead!)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0, 242, 254, 0.12)';
+      ctx.lineWidth = 1;
+      const maxDist = 110;
+      const maxDistSq = maxDist * maxDist;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          if (Math.abs(dx) > maxDist || Math.abs(dy) > maxDist) continue;
+          if (dx * dx + dy * dy < maxDistSq) {
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      // Draw particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.fillStyle = p.color + '0.6)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
   }
 
   // BPMN 2.0 Real-time Interactive Process Simulator
@@ -1052,7 +1227,7 @@ const Presentation = (() => {
     initInteractiveWidgets();
     startTimer();
     updateUI();
-    initPerformance();
+    initFpsDetector();
   }
 
   return {
