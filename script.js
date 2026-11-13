@@ -13,6 +13,7 @@ const Presentation = (() => {
   let timerInterval = null;
   let isFullscreen = false;
   let laserMode = false;
+  let perfMode = localStorage.getItem('is_presentation_perf_mode') === 'true';
 
   // DOM Elements
   const slides = document.querySelectorAll('.slide');
@@ -24,6 +25,7 @@ const Presentation = (() => {
   const btnSound = document.getElementById('btn-sound');
   const btnFullscreen = document.getElementById('btn-fullscreen');
   const btnLaser = document.getElementById('btn-laser');
+  const btnPerf = document.getElementById('btn-perf');
 
   // Smartboard Side Touch Buttons
   const sbNavPrev = document.getElementById('sb-nav-prev');
@@ -181,7 +183,21 @@ const Presentation = (() => {
   let confettiParticles = [];
   let confettiAnimFrame = null;
 
+  function stopConfetti() {
+    if (confettiAnimFrame) {
+      cancelAnimationFrame(confettiAnimFrame);
+      confettiAnimFrame = null;
+    }
+    const oldCanvas = document.getElementById('confetti-canvas');
+    if (oldCanvas && oldCanvas.parentNode) {
+      oldCanvas.parentNode.removeChild(oldCanvas);
+    }
+  }
+
   function launchConfetti() {
+    stopConfetti();
+    if (perfMode) return; // skip canvas confetti in perf mode
+
     const canvas = document.createElement('canvas');
     canvas.id = 'confetti-canvas';
     document.body.appendChild(canvas);
@@ -191,17 +207,18 @@ const Presentation = (() => {
 
     confettiParticles = [];
     const colors = ['#00f2fe', '#4facfe', '#10b981', '#f59e0b', '#f43f5e', '#a855f7'];
+    const count = 45;
 
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < count; i++) {
       confettiParticles.push({
         x: canvas.width / 2 + (Math.random() - 0.5) * 200,
         y: canvas.height * 0.7,
-        vx: (Math.random() - 0.5) * 14,
-        vy: -Math.random() * 14 - 6,
-        size: Math.random() * 8 + 4,
+        vx: (Math.random() - 0.5) * 12,
+        vy: -Math.random() * 12 - 5,
+        size: Math.random() * 7 + 4,
         color: colors[Math.floor(Math.random() * colors.length)],
         rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 10,
+        rotSpeed: (Math.random() - 0.5) * 8,
         opacity: 1
       });
     }
@@ -215,7 +232,7 @@ const Presentation = (() => {
         p.y += p.vy;
         p.vy += 0.45;
         p.rotation += p.rotSpeed;
-        p.opacity -= 0.009;
+        p.opacity -= 0.012;
 
         if (p.opacity > 0 && p.y < canvas.height + 20) {
           alive = true;
@@ -232,11 +249,11 @@ const Presentation = (() => {
       if (alive) {
         confettiAnimFrame = requestAnimationFrame(animateConfetti);
       } else {
-        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+        stopConfetti();
       }
     }
 
-    animateConfetti();
+    confettiAnimFrame = requestAnimationFrame(animateConfetti);
   }
 
   // Go to slide
@@ -275,6 +292,8 @@ const Presentation = (() => {
     if (currentSlide === 26) {
       playSuccessSound();
       launchConfetti();
+    } else {
+      stopConfetti();
     }
   }
 
@@ -403,7 +422,83 @@ const Presentation = (() => {
     playTone(laserMode ? 880 : 440, 'triangle', 0.1, 0.05);
   }
 
+  // Turbo / Eco Mode (Optimization for Weak Devices & Smartboards)
+  function showPerfToast(msg) {
+    let toast = document.querySelector('.perf-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'perf-toast';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> <span>${msg}</span>`;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+
+  function togglePerfMode(forcedState = null, isAuto = false) {
+    if (forcedState !== null) {
+      perfMode = forcedState;
+    } else {
+      perfMode = !perfMode;
+    }
+
+    document.body.classList.toggle('perf-mode', perfMode);
+    if (btnPerf) {
+      btnPerf.classList.toggle('active-tool', perfMode);
+      btnPerf.title = perfMode ? 'Турбо-режим ВКЛЮЧЕН (Нажмите для обычного)' : 'Турбо-режим (Для слабых устройств)';
+    }
+
+    localStorage.setItem('is_presentation_perf_mode', perfMode ? 'true' : 'false');
+    playTone(perfMode ? 750 : 350, 'sine', 0.08, 0.04);
+
+    if (perfMode) {
+      if (isAuto) {
+        showPerfToast('Включен Турбо-режим: анимации упрощены для плавной работы на доске');
+      } else {
+        showPerfToast('Турбо-режим ВКЛ: максимальная плавность');
+      }
+    } else if (!isAuto) {
+      showPerfToast('Турбо-режим ВЫКЛ: полный визуальный стиль');
+    }
+  }
+
+  function initFpsDetector() {
+    // If explicitly stored in localStorage, apply
+    if (localStorage.getItem('is_presentation_perf_mode') !== null) {
+      if (perfMode) {
+        document.body.classList.add('perf-mode');
+        if (btnPerf) btnPerf.classList.add('active-tool');
+      }
+      return;
+    }
+
+    // Auto-detect FPS on startup
+    let frameCount = 0;
+    let startTime = performance.now();
+    let completed = false;
+
+    function checkFps(time) {
+      if (completed) return;
+      frameCount++;
+      const elapsed = time - startTime;
+      if (elapsed >= 2200) {
+        completed = true;
+        const fps = (frameCount * 1000) / elapsed;
+        if (fps < 32) {
+          togglePerfMode(true, true);
+        }
+        return;
+      }
+      requestAnimationFrame(checkFps);
+    }
+    requestAnimationFrame(checkFps);
+  }
+
   let laserTrail = [];
+  let laserAnimId = null;
+
   function initLaserPointer() {
     const canvas = document.getElementById('laser-canvas');
     if (!canvas) return;
@@ -417,13 +512,20 @@ const Presentation = (() => {
       canvas.height = window.innerHeight;
     });
 
+    function scheduleLaser() {
+      if (!laserAnimId) {
+        laserAnimId = requestAnimationFrame(renderLaser);
+      }
+    }
+
     function addLaserPoint(x, y) {
       laserTrail.push({
         x,
         y,
         life: 1.0,
-        radius: 8
+        radius: 7
       });
+      scheduleLaser();
     }
 
     // Touch / Pointer drawing on whiteboard
@@ -440,31 +542,29 @@ const Presentation = (() => {
     });
 
     function renderLaser() {
+      laserAnimId = null;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (laserTrail.length > 0) {
         for (let i = laserTrail.length - 1; i >= 0; i--) {
           const pt = laserTrail[i];
-          pt.life -= 0.025; // fade over ~1 sec
+          pt.life -= 0.035; // faster decay for crisp pointer
 
           if (pt.life <= 0) {
             laserTrail.splice(i, 1);
           } else {
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#00f2fe';
             ctx.fillStyle = `rgba(0, 242, 254, ${pt.life})`;
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, pt.radius * pt.life, 0, Math.PI * 2);
             ctx.fill();
-            ctx.shadowBlur = 0;
           }
         }
+
+        if (laserTrail.length > 0) {
+          laserAnimId = requestAnimationFrame(renderLaser);
+        }
       }
-
-      requestAnimationFrame(renderLaser);
     }
-
-    renderLaser();
   }
 
   // Keyboard navigation
@@ -525,6 +625,13 @@ const Presentation = (() => {
           toggleLaserMode();
           break;
 
+        case 'p':
+        case 'P':
+        case 'з':
+        case 'З':
+          togglePerfMode();
+          break;
+
         case '?':
           toggleHelpModal();
           break;
@@ -568,7 +675,7 @@ const Presentation = (() => {
     }, { passive: true });
   }
 
-  // Interactive Background Canvas with Shockwaves
+  // Interactive Background Canvas with Shockwaves (Lightweight & Throttled)
   let shockwaves = [];
 
   function initCanvasAnimation() {
@@ -585,67 +692,89 @@ const Presentation = (() => {
     });
 
     window.addEventListener('pointerdown', (e) => {
-      shockwaves.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 6,
-        maxRadius: 110,
-        opacity: 0.65
-      });
+      if (perfMode) return;
+      if (shockwaves.length < 4) {
+        shockwaves.push({
+          x: e.clientX,
+          y: e.clientY,
+          radius: 6,
+          maxRadius: 90,
+          opacity: 0.55
+        });
+      }
     });
 
     const particles = [];
-    const count = Math.min(Math.floor((width * height) / 14000), 75);
+    // 22 particles is visually great and takes virtually zero CPU/GPU
+    const count = 22;
 
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
-        radius: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        radius: Math.random() * 1.5 + 1,
         color: Math.random() > 0.4 ? 'rgba(0, 242, 254, ' : 'rgba(99, 102, 241, '
       });
     }
 
-    function animate() {
+    let lastFrameTime = 0;
+    const FRAME_DELAY = 1000 / 30; // Throttle to 30 FPS
+
+    function animate(currentTime) {
+      if (perfMode) {
+        // Skip canvas calculation completely in perf mode
+        requestAnimationFrame(animate);
+        return;
+      }
+
+      if (currentTime - lastFrameTime < FRAME_DELAY) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime = currentTime;
+
       ctx.clearRect(0, 0, width, height);
 
       // Draw shockwaves
       for (let s = shockwaves.length - 1; s >= 0; s--) {
         const sw = shockwaves[s];
-        sw.radius += 4;
-        sw.opacity -= 0.022;
+        sw.radius += 3.5;
+        sw.opacity -= 0.025;
 
         if (sw.opacity <= 0 || sw.radius >= sw.maxRadius) {
           shockwaves.splice(s, 1);
         } else {
           ctx.strokeStyle = `rgba(0, 242, 254, ${sw.opacity})`;
-          ctx.lineWidth = 1.5;
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
           ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
           ctx.stroke();
         }
       }
 
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+      // Draw all connections in a SINGLE batch stroke (zero draw call overhead!)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0, 242, 254, 0.12)';
+      ctx.lineWidth = 1;
+      const maxDist = 110;
+      const maxDistSq = maxDist * maxDist;
 
-          if (dist < 135) {
-            const alpha = (1 - dist / 135) * 0.18;
-            ctx.strokeStyle = `rgba(0, 242, 254, ${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          if (Math.abs(dx) > maxDist || Math.abs(dy) > maxDist) continue;
+          if (dx * dx + dy * dy < maxDistSq) {
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
           }
         }
       }
+      ctx.stroke();
 
       // Draw particles
       particles.forEach(p => {
@@ -657,7 +786,7 @@ const Presentation = (() => {
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        ctx.fillStyle = p.color + '0.7)';
+        ctx.fillStyle = p.color + '0.6)';
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -666,7 +795,7 @@ const Presentation = (() => {
       requestAnimationFrame(animate);
     }
 
-    animate();
+    requestAnimationFrame(animate);
   }
 
   // BPMN 2.0 Real-time Interactive Process Simulator
@@ -1062,6 +1191,7 @@ const Presentation = (() => {
     if (btnSound) btnSound.addEventListener('pointerdown', toggleSound);
     if (btnFullscreen) btnFullscreen.addEventListener('pointerdown', toggleFullscreen);
     if (btnLaser) btnLaser.addEventListener('pointerdown', toggleLaserMode);
+    if (btnPerf) btnPerf.addEventListener('pointerdown', (e) => { e.preventDefault(); togglePerfMode(); });
 
     const btnOverview = document.getElementById('btn-overview');
     if (btnOverview) btnOverview.addEventListener('pointerdown', () => toggleOverviewModal());
@@ -1097,6 +1227,7 @@ const Presentation = (() => {
     initInteractiveWidgets();
     startTimer();
     updateUI();
+    initFpsDetector();
   }
 
   return {
@@ -1109,7 +1240,8 @@ const Presentation = (() => {
     toggleDeployModal,
     openDeployModal: () => toggleDeployModal(true),
     toggleHelpModal,
-    toggleLaserMode
+    toggleLaserMode,
+    togglePerfMode
   };
 })();
 

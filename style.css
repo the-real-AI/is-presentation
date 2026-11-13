@@ -84,9 +84,7 @@ html, body {
   transform: translateY(-50%);
   width: 58px;
   height: 130px;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
   font-size: 1.5rem;
@@ -203,9 +201,7 @@ html, body {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: rgba(8, 12, 20, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(8, 12, 20, 0.96);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -405,27 +401,32 @@ html, body {
   width: 100%;
   height: 100%;
   padding: 16px 70px; /* Отступ по краям для боковых кнопок доски */
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transform: translateX(50px) scale(0.97);
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.45s;
+  transform: translateX(35px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
   pointer-events: none;
+  contain: layout style;
 }
 
 .slide.active {
+  display: flex !important;
   opacity: 1;
   visibility: visible;
-  transform: translateX(0) scale(1);
+  transform: translateX(0);
   pointer-events: auto;
 }
 
 .slide.slide-prev {
-  transform: translateX(-50px) scale(0.97);
+  display: flex !important;
+  transform: translateX(-35px);
+}
+
+.slide:not(.active) * {
+  animation-play-state: paused !important;
 }
 
 .slide-inner {
@@ -486,15 +487,14 @@ html, body {
 
 /* Glassmorphism Cards */
 .card-glass {
-  background: var(--bg-card);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: #0e1524;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 20px;
-  transition: var(--transition-smooth);
+  transition: transform 0.2s ease, border-color 0.2s ease;
   position: relative;
   overflow: hidden;
+  contain: layout style;
 }
 
 .card-glass:hover, .card-glass:active {
@@ -1550,7 +1550,7 @@ html, body {
 
 /* Live Feed / Status Bar */
 .bpmn-live-feed {
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(15, 23, 42, 0.94);
   border: 1px solid rgba(0, 242, 254, 0.3);
   border-radius: 12px;
   padding: 9px 14px;
@@ -1558,7 +1558,6 @@ html, body {
   align-items: center;
   gap: 12px;
   transition: all 0.35s ease;
-  backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
@@ -2371,9 +2370,7 @@ html, body {
   left: 0;
   right: 0;
   height: var(--dock-height);
-  background: rgba(8, 12, 20, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(8, 12, 20, 0.96);
   border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -2493,16 +2490,14 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(4, 7, 12, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(4, 7, 12, 0.94);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
   padding: 24px;
 }
 
@@ -2660,4 +2655,69 @@ html, body {
   0% { stroke-opacity: 0.3; }
   50% { stroke-opacity: 1; filter: drop-shadow(0 0 4px #00f2fe); }
   100% { stroke-opacity: 0.3; }
+}
+
+/* ==========================================================================
+   TURBO / ECO MODE OPTIMIZATION (FOR WEAK DEVICES & SMARTBOARDS)
+   ========================================================================== */
+#btn-perf.active-tool {
+  background: #f59e0b !important;
+  color: #07090e !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.7) !important;
+}
+
+body.perf-mode #bg-canvas {
+  display: none !important;
+}
+
+body.perf-mode * {
+  animation: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+body.perf-mode .slide {
+  transition: opacity 0.12s ease !important;
+  transform: none !important;
+}
+
+body.perf-mode .slide-inner {
+  transform: none !important;
+}
+
+body.perf-mode .card-glass,
+body.perf-mode .btn-pill,
+body.perf-mode .dock-btn,
+body.perf-mode .nav-btn,
+body.perf-mode .dock-dot {
+  transition: transform 0.08s ease !important;
+}
+
+.perf-toast {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  background: #1e293b;
+  border: 1px solid #f59e0b;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.perf-toast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
