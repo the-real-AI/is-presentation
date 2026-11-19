@@ -806,36 +806,6 @@ const Presentation = (() => {
   const modalGuide = document.getElementById('modal-guide');
   const modalGuideTitle = document.getElementById('modal-guide-title');
   const modalGuideBody = document.getElementById('modal-guide-body');
-  const btnGuide = document.getElementById('btn-guide');
-
-  function openCurrentGuide() {
-    toggleGuideModal(true);
-  }
-
-  function toggleGuideModal(show) {
-    if (!modalGuide) return;
-    const shouldOpen = (show !== undefined) ? show : !modalGuide.classList.contains('active');
-    
-    if (shouldOpen) {
-      populateGuideModal(currentSlide);
-      closeAllModals();
-      modalGuide.classList.add('active');
-      playTone(580, 'sine', 0.08, 0.04);
-    } else {
-      modalGuide.classList.remove('active');
-      playTone(420, 'sine', 0.06, 0.03);
-    }
-  }
-
-  function copyGuideCode(btn) {
-    const pre = btn.closest('.guide-code-box').querySelector('pre');
-    if (!pre) return;
-    navigator.clipboard.writeText(pre.textContent).then(() => {
-      const origText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check text-emerald"></i> Скопировано!';
-      playSuccessSound();
-      setTimeout(() => { btn.innerHTML = origText; }, 2000);
-    });
   }
 
   function populateGuideModal(slideNum) {
@@ -1330,15 +1300,6 @@ const Presentation = (() => {
     if (btnHelp) btnHelp.addEventListener('pointerdown', () => toggleHelpModal());
 
     const btnDeploy = document.getElementById('btn-deploy');
-    if (btnGuide) btnGuide.addEventListener("pointerdown", () => openCurrentGuide());
-    if (btnDeploy) btnDeploy.addEventListener('pointerdown', () => toggleDeployModal());
-
-    // Close modals on touch outside
-    [modalOverview, modalVideo, modalDeploy, modalHelp].forEach(m => {
-      if (m) {
-        m.addEventListener('pointerdown', (e) => {
-          if (e.target === m) closeAllModals();
-        });
       }
     });
   }

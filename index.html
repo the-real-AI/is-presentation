@@ -49,10 +49,6 @@
     </div>
 
     <div class="nav-right">
-      <button class="nav-btn guide-pill-btn" id="btn-guide" title="Инструкция по реализации для текущего слайда (I)">
-        <i class="fa-solid fa-screwdriver-wrench text-cyan"></i>
-        <span>Инструкция</span>
-      </button>
 
       <!-- Presentation Timer -->
       <div class="timer-badge" id="timer-badge" title="Таймер выступления">
@@ -289,7 +285,6 @@
           <h2>Что такое Информационная Система (ИС)?</h2>
           <p>Взаимосвязанный комплекс аппаратных, программных средств, данных и регламентов для решения бизнес-задач</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -386,7 +381,27 @@
               <i class="fa-solid fa-circle-check"></i> Баланс нагрузки: 0% потерь пакетов
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Анализ предметной области</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Опишите бизнес-процессы «как есть» (AS-IS) в нотации BPMN.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Выявите данные, пользователей и внешние системы.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Составьте глоссарий терминов домена.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> BPMN 2.0 / PlantUML</div>
+              <pre class="code-snippet">@startuml
+actor Пользователь
+actor Система
+Пользователь -> Система: Создать заказ
+Система --> Пользователь: ID заказа
+@enduml</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -398,7 +413,6 @@
           <h2>Цели и Задачи: Закон Боэма (Boehm's Law)</h2>
           <p>Почему проектирование экономит миллионы рублей и снижает риски проекта</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -492,7 +506,29 @@
               <i class="fa-solid fa-shield-cat"></i> Проектирование страхует бюджет проекта
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Выбор класса системы</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Определите основных стейкхолдеров и их задачи.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Выберите класс: OLTP, DSS, ERP или MIS.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Задайте нефункциональные требования (SLA, доступность).</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> SQL (OLTP vs OLAP)</div>
+              <pre class="code-snippet">-- OLTP: быстрая запись
+INSERT INTO orders(user_id, amount)
+VALUES (42, 1500.00);
+
+-- OLAP: аналитика
+SELECT date_trunc('month', created_at),
+       SUM(amount)
+FROM orders GROUP BY 1;</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -504,7 +540,6 @@
           <h2>Жизненный Цикл Информационной Системы (SDLC)</h2>
           <p>Непрерывный сквозной цикл от бизнес-идеи до вывода из эксплуатации</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -574,7 +609,31 @@
               В фазе 1 зафиксировали перечень из 500 госуслуг, в фазе 2 спроектировали межведомственную интеграцию (СМЭВ), в фазе 3 создали микросервисы, в фазе 4 протестировали нагрузку 100 000 одновременных входов, в фазе 5 вывели в промышленный контур.
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Планирование жизненного цикла</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Выберите модель ЖЦ: Waterfall / Spiral / Agile.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Создайте Roadmap: фазы, артефакты, ответственные.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Определите критерии перехода между фазами.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> YAML (GitHub Projects)</div>
+              <pre class="code-snippet">phases:
+  - name: Анализ
+    duration: 2w
+    artifacts: [SRS, Glossary]
+  - name: Проектирование
+    duration: 3w
+    artifacts: [ERD, C4-диаграмма]
+  - name: Разработка
+    duration: 8w
+    artifacts: [Code, Tests]</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -586,7 +645,6 @@
           <h2>Классические Модели: Waterfall и V-Модель</h2>
           <p>Последовательные регламентированные методологии проектирования сложных систем</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -656,7 +714,28 @@
               <i class="fa-solid fa-shield-halved"></i> Дефект выявляется на том же уровне абстракции
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Написание требований (SRS)</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Используйте шаблон IEEE 830: цель, область, определения.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Запишите функциональные требования в формате «Система должна…».</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Добавьте атрибуты качества: производительность, безопасность.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Gherkin (BDD)</div>
+              <pre class="code-snippet">Feature: Авторизация пользователя
+
+  Scenario: Успешный вход
+    Given пользователь на странице /login
+    When  вводит логин "admin" и пароль "s3cr3t"
+    Then  перенаправляется на /dashboard
+    And   видит приветствие "Добро пожаловать"</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -668,7 +747,6 @@
           <h2>Гибкие Методологии: Agile, Scrum и Kanban</h2>
           <p>Итеративное проектирование через короткие спринты и непрерывную демонстрацию инкремента</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -768,7 +846,30 @@
               <i class="fa-solid fa-bolt"></i> Lead Time задачи сократился с 14 дней до 3 дней
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Запуск Scrum-спринта</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Создайте Product Backlog с User Stories (Как &lt;роль&gt; хочу &lt;цель&gt;).</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Проведите Sprint Planning: декомпозируйте Stories на задачи ≤ 8ч.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте Kanban-доску: To Do → In Progress (WIP≤2) → Done.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Jira / GitHub Issues</div>
+              <pre class="code-snippet"># User Story
+Как менеджер хочу видеть
+отчёт продаж за месяц,
+чтобы контролировать план.
+
+# Критерии приёмки:
+- [ ] График по дням
+- [ ] Экспорт в CSV
+- [ ] Загружается < 2с</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -780,7 +881,6 @@
           <h2>Сбор Требований: ТЗ по ГОСТ vs User Stories</h2>
           <p>Формализация функциональных и нефункциональных требований (FURPS+)</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -852,7 +952,31 @@
               <i class="fa-solid fa-check-double"></i> Требование проверяемо и не содержит двусмысленности
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Создание UML диаграмм</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Use Case — опишите взаимодействие актёров с системой.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Sequence — покажите порядок вызовов между объектами.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Class — спроектируйте структуру классов с атрибутами и методами.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> PlantUML</div>
+              <pre class="code-snippet">@startuml
+actor Client
+participant "API GW" as GW
+participant AuthService
+
+Client -> GW: POST /login
+GW -> AuthService: validate(jwt)
+AuthService --> GW: 200 OK
+GW --> Client: access_token
+@enduml</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -864,7 +988,6 @@
           <h2>Бизнес-Моделирование: Стандарт BPMN 2.0</h2>
           <p>Формализация процессов организации «Как есть» (AS-IS) и «Как будет» (TO-BE)</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1057,7 +1180,30 @@
               </div>
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Прототип в Figma за 1 час</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Нарисуйте Wireframe (серые блоки) для 3 ключевых экранов.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Добавьте интерактивные переходы между экранами (Prototype → Flow).</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Получите обратную связь от заказчика до начала написания кода.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> CSS (базовый макет)</div>
+              <pre class="code-snippet">.layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1069,7 +1215,6 @@
           <h2>Архитектура Системы: Монолит vs Распределенные ИС</h2>
           <p>Сравнение целостных монолитных решений с горизонтально масштабируемыми системами</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1137,7 +1282,35 @@
               <i class="fa-solid fa-shield-heart"></i> Отказоустойчивость: система деградирует плавно
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Проектирование схемы БД</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Нарисуйте ER-диаграмму (сущности, атрибуты, связи).</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Нормализуйте до 3NF — устраните избыточность.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Создайте индексы на FK и часто используемые поля.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> PostgreSQL DDL</div>
+              <pre class="code-snippet">CREATE TABLE users (
+  id      BIGSERIAL PRIMARY KEY,
+  email   TEXT UNIQUE NOT NULL,
+  created TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_users_email
+  ON users(email);
+
+CREATE TABLE orders (
+  id      BIGSERIAL PRIMARY KEY,
+  user_id BIGINT REFERENCES users(id),
+  amount  NUMERIC(12,2)
+);</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1149,7 +1322,6 @@
           <h2>Микросервисная Архитектура (Microservices)</h2>
           <p>Декомпозиция по бизнес-доменам (DDD), единая точка входа (API Gateway) и автономные БД</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1236,7 +1408,32 @@
               <i class="fa-solid fa-code-branch"></i> Каждая команда разработчиков деплоит свой сервис независимо
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Оптимизация SQL-запросов</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Запустите EXPLAIN ANALYZE для медленных запросов.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Добавьте составной индекс для JOIN-полей.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Используйте CTE вместо вложенных подзапросов.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> PostgreSQL</div>
+              <pre class="code-snippet">-- Анализ плана выполнения
+EXPLAIN ANALYZE
+SELECT u.email, COUNT(o.id)
+FROM users u
+JOIN orders o ON o.user_id = u.id
+WHERE o.created > NOW() - '30d'::interval
+GROUP BY u.email;
+
+-- Индекс для ускорения JOIN
+CREATE INDEX idx_orders_uid
+  ON orders(user_id, created DESC);</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1248,7 +1445,6 @@
           <h2>Событийная Архитектура (EDA) и Apache Kafka</h2>
           <p>Асинхронная передача данных через события: полная временная развязка сервисов</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1322,7 +1518,33 @@
               <i class="fa-solid fa-check"></i> Падение сервиса уведомлений не останавливает прием платежей
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Когда выбрать NoSQL</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>&gt; 100k RPS или документ-ориентированные данные → выбирайте MongoDB.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Если структура данных часто меняется — NoSQL выигрывает у реляционных.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте репликацию и шардирование с самого начала проекта.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> MongoDB Shell</div>
+              <pre class="code-snippet">// Создание документа
+db.products.insertOne({
+  name: "Ноутбук Pro",
+  price: 89900,
+  tags: ["electronics", "laptop"],
+  specs: { ram: 16, ssd: 512 }
+});
+
+// Индекс + поиск
+db.products.createIndex({ tags: 1 });
+db.products.find({ tags: "laptop" })
+           .sort({ price: -1 });</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1334,7 +1556,6 @@
           <h2>Облачные Архитектуры: IaaS, PaaS, SaaS и Serverless</h2>
           <p>Разделение зон ответственности между заказчиком и облачным провайдером</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1386,7 +1607,29 @@
           <div class="stat-pill"><i class="fa-solid fa-cloud-bolt text-accent"></i> Автоскейлинг по нагрузке</div>
           <div class="stat-pill"><i class="fa-solid fa-coins text-accent"></i> FinOps: оплата только за секунды вычислений</div>
           <div class="stat-pill"><i class="fa-solid fa-earth-americas text-accent"></i> Multi-AZ резервирование</div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Выбор архитектурного стиля</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Оцените масштаб: монолит → 1–5 разраб., микросервисы → 10+.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Нарисуйте C4-диаграмму: Context → Container → Component.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Задокументируйте ADR (Architecture Decision Record).</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> C4 PlantUML</div>
+              <pre class="code-snippet">@startuml
+!include C4_Context.puml
+System(IS, "Инф. Система", "Ядро платформы")
+Person(user, "Пользователь")
+System_Ext(pay, "Платёжный шлюз")
+Rel(user, IS, "HTTPS")
+Rel(IS, pay, "REST API")
+@enduml</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1398,7 +1641,6 @@
           <h2>Моделирование UML: Sequence Diagram (Диаграмма последовательностей)</h2>
           <p>Временная шкала обмена сообщениями между компонентами системы</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1470,7 +1712,33 @@
               <i class="fa-solid fa-check"></i> Точная фиксация сетевых интерфейсов до написания кода
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Декомпозиция на микросервисы</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Выделите Bounded Contexts по Domain-Driven Design (DDD).</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Каждый сервис — одна база данных, независимый деплой.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Используйте API Gateway для маршрутизации входящих запросов.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Docker Compose</div>
+              <pre class="code-snippet">services:
+  api-gateway:
+    image: nginx:alpine
+    ports: ["80:80"]
+  auth-service:
+    build: ./auth
+    environment:
+      DB_URL: postgres://auth_db/auth
+  order-service:
+    build: ./orders
+    environment:
+      DB_URL: postgres://order_db/orders</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1482,7 +1750,6 @@
           <h2>Проектирование Баз Данных: Реляционные vs NoSQL</h2>
           <p>ER-диаграммы связей таблиц, нормализация 1NF–3NF и выбор СУБД</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1581,7 +1848,35 @@
               <small><strong>Пример нормализации:</strong> Таблица пользователей отделена от заказов, исключая дублирование ФИО покупателя при каждом новом заказе (3-я нормальная форма).</small>
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Проектирование REST API</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Используйте существительные в URL: /users, /orders/{id}.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Задайте HTTP-коды: 200/201/400/401/404/500.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Опишите контракт в OpenAPI (Swagger) до начала кодирования.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> OpenAPI 3.0 YAML</div>
+              <pre class="code-snippet">paths:
+  /users/{id}:
+    get:
+      summary: Получить пользователя
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Не найден</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1593,7 +1888,6 @@
           <h2>Проектирование Пользовательских Интерфейсов (UI/UX)</h2>
           <p>Создание CJM (пути пользователя), кликабельных прототипов в Figma и дизайн-систем</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1663,7 +1957,32 @@
               <i class="fa-solid fa-thumbs-up"></i> Конверсия оформления заказа выросла на 28%
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Базовая защита ИС</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Включите JWT-аутентификацию + HTTPS на всех эндпоинтах.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Запустите OWASP ZAP / Snyk для поиска уязвимостей.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте Rate Limiting и WAF перед публичным API.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Nginx (Rate Limit + TLS)</div>
+              <pre class="code-snippet">server {
+  listen 443 ssl;
+  ssl_certificate /etc/ssl/cert.pem;
+
+  location /api/ {
+    limit_req zone=api burst=20 nodelay;
+    proxy_pass http://backend;
+  }
+}
+limit_req_zone $binary_remote_addr
+  zone=api:10m rate=10r/s;</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1675,7 +1994,6 @@
           <h2>Интеграция Систем: REST, gRPC и OpenAPI (Swagger)</h2>
           <p>Спецификация API-First: согласование контракта до написания программного кода</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1746,7 +2064,31 @@
               <i class="fa-solid fa-file-circle-check"></i> Автоматическая генерация документации и SDK
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Пирамида тестирования</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Unit-тесты: покройте 80%+ бизнес-логики (Jest / pytest).</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Integration-тесты: проверьте API-контракты (Supertest / Postman).</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>E2E-тесты: автоматизируйте 5–10 критических сценариев (Playwright).</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> pytest</div>
+              <pre class="code-snippet">def test_order_total():
+    order = Order(items=[
+        Item("Ноутбук", 89900),
+        Item("Мышь",    1500),
+    ])
+    assert order.total() == 91400
+
+def test_discount():
+    order = Order(items=[...], promo="SAVE10")
+    assert order.total() == 82260</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1758,7 +2100,6 @@
           <h2>Информационная Безопасность: Security by Design</h2>
           <p>Встраивание механизмов защиты на самых ранних этапах проектирования архитектуры</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1829,7 +2170,36 @@
               <i class="fa-solid fa-lock"></i> Невозможно подделать без приватного ключа
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Настройка CI/CD Pipeline</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Создайте .github/workflows/ci.yml: lint → test → build → deploy.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Настройте автодеплой на staging при push в ветку main.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Добавьте Telegram/Slack уведомления о статусе сборки.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> GitHub Actions YAML</div>
+              <pre class="code-snippet">name: CI/CD
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install
+      - run: npm test
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: docker build -t app .
+      - run: docker push registry/app</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1841,7 +2211,6 @@
           <h2>Отказоустойчивость и High Availability (HA)</h2>
           <p>Проектирование систем, способных непрерывно работать даже при физическом сгорании серверов</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1917,7 +2286,36 @@
               <i class="fa-solid fa-shield-heart"></i> Трафик изолирован от аварийного узла за 1.5 секунды
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Деплой в облако (Kubernetes)</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Упакуйте приложение в Docker-контейнер.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Создайте Kubernetes Deployment с 3 репликами и liveness probe.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте Horizontal Pod Autoscaler по CPU > 70%.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Kubernetes YAML</div>
+              <pre class="code-snippet">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: is-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: is-app }
+  template:
+    spec:
+      containers:
+      - name: app
+        image: registry/app:latest
+        resources:
+          requests: { cpu: 250m }</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1929,7 +2327,6 @@
           <h2>CASE-Средства и Стек Современного Проектировщика</h2>
           <p>Computer-Aided Software Engineering: инструментарий автоматизации проектирования и концепция «Diagrams-as-Code»</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -1986,7 +2383,36 @@
               Все схемы хранятся в репозитории Git рядом с кодом. Архитектурные решения принимаются через ADR (Architecture Decision Records) с процедурой Code Review.
             </p>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Инструменты проектирования</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Enterprise Architect — рисуйте UML, ERD, BPMN в одном инструменте.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>draw.io (бесплатно) — экспорт диаграмм в SVG/PNG для документации.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>PlantUML в VS Code — превью диаграмм прямо в редакторе (Alt+D).</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> PlantUML (в VS Code)</div>
+              <pre class="code-snippet">@startuml
+class User {
+  +id: Long
+  +email: String
+  +login(): Token
+}
+
+class Order {
+  +id: Long
+  +amount: Decimal
+  +status: String
+}
+
+User "1" --o "many" Order
+@enduml</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1998,7 +2424,6 @@
           <h2>Тестирование Архитектуры: Пирамида Тестов и Стресс-Тесты</h2>
           <p>Верификация устойчивости системы: от изолированных unit-тестов до Chaos Engineering</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -2065,7 +2490,32 @@
               <i class="fa-solid fa-shield-halved"></i> Ошибки локализуются до попадания в продакшен
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Автогенерация документации</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Используйте JSDoc/Sphinx/Javadoc — автоматически генерируйте HTML.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Опишите API в OpenAPI → публикуйте через Swagger UI.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Ведите CHANGELOG.md с семантическим версионированием (SemVer).</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> JSDoc</div>
+              <pre class="code-snippet">/**
+ * Создаёт новый заказ
+ * @param {number} userId - ID пользователя
+ * @param {Item[]} items  - Список товаров
+ * @returns {Promise&lt;Order&gt;} Созданный заказ
+ * @throws {ValidationError} Если корзина пуста
+ */
+async function createOrder(userId, items) {
+  if (!items.length) throw new ValidationError();
+  return OrderRepo.save({ userId, items });
+}</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2077,7 +2527,6 @@
           <h2>CI/CD и DevOps: Автоматизация Развертывания</h2>
           <p>Непрерывная интеграция и доставка обновлений без простоя сервиса (Zero Downtime)</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -2140,7 +2589,35 @@
               Программист вносит правку в репозиторий. Пайплайн автоматически прогоняет тесты, упаковывает сайт в Docker-образ и выкатывает в облако за 2 минуты без ручного участия сисадмина.
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Интеграция через API / очереди</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Определите паттерн: синхронный (REST/gRPC) или асинхронный (Kafka).</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Используйте Adapter-паттерн для разных форматов данных.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте Circuit Breaker для устойчивости к отказам партнёров.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Apache Kafka (Python Producer)</div>
+              <pre class="code-snippet">from kafka import KafkaProducer
+import json
+
+producer = KafkaProducer(
+  bootstrap_servers='kafka:9092',
+  value_serializer=lambda v:
+    json.dumps(v).encode('utf-8')
+)
+
+producer.send('orders', {
+  'order_id': 1234,
+  'status':   'created',
+  'amount':   15900
+})</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2152,7 +2629,6 @@
           <h2>Экономика Проекта: TCO (CAPEX vs OPEX) и ROI</h2>
           <p>Совокупная стоимость владения информационной системой на горизонте 3–5 лет</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -2217,7 +2693,33 @@
               <i class="fa-solid fa-coins"></i> Срок окупаемости инвестиций: 8 месяцев
             </div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Оценка стоимости ИС (TCO)</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Используйте метод Function Points или Story Points для оценки объёма.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Разделите затраты: CAPEX (разработка) и OPEX (хостинг, поддержка).</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Рассчитайте ROI: (Выгода − Затраты) / Затраты × 100%.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Таблица TCO (3 года)</div>
+              <pre class="code-snippet"># TCO за 3 года
+CAPEX:
+  Разработка:  2 400 000 руб
+  Лицензии:      300 000 руб
+
+OPEX (ежегодно):
+  Хостинг:       480 000 руб
+  Поддержка:     600 000 руб
+  Итого 3 года: 5 340 000 руб
+
+ROI = (8M - 5.34M) / 5.34M
+    = 49.8%</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2229,7 +2731,6 @@
           <h2>Практический Кейс: Архитектура E-Commerce Платформы</h2>
           <p>Реальная комплексная архитектура масштабируемого интернет-магазина (20 000 RPS)</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -2281,7 +2782,35 @@
           <div class="res-item"><i class="fa-solid fa-bolt text-accent"></i> Отклик каталога: <strong>&lt; 35 мс</strong></div>
           <div class="res-item"><i class="fa-solid fa-shield-check text-accent"></i> Сохранность платежей: <strong>100% (Saga Pattern)</strong></div>
           <div class="res-item"><i class="fa-solid fa-server text-accent"></i> Доступность SLA: <strong>99.98%</strong></div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Настройка мониторинга (SLO)</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Добавьте метрики Prometheus: latency_p99, error_rate, throughput.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Создайте Grafana dashboard с SLO-панелями.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Настройте алерт при error_rate > 1% на протяжении 5 минут.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Prometheus Alert Rules</div>
+              <pre class="code-snippet">groups:
+- name: slo
+  rules:
+  - alert: HighErrorRate
+    expr: |
+      rate(http_requests_total
+        {status=~"5.."}[5m])
+      / rate(http_requests_total[5m])
+      > 0.01
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Error rate > 1%"</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2293,7 +2822,6 @@
           <h2>Современные Тренды: ИИ в Архитектуре, Low-Code и Edge</h2>
           <p>Инновационные технологии, трансформирующие системный инжиниринг</p>
         </div>
-        <div class="impl-guide-banner" onclick="Presentation.openCurrentGuide()" title="Нажмите, чтобы открыть пошаговую инструкцию и готовый пример реализации">
           <div class="impl-guide-info">
             <span class="impl-badge"><i class="fa-solid fa-screwdriver-wrench"></i> Практика</span>
             <span class="impl-text"><strong>Инструкция по реализации:</strong> пошаговый алгоритм, рабочий пример кода и чек-лист</span>
@@ -2331,7 +2859,34 @@
             <p>Оптимизация облачных ресурсов, отключение простаивающих серверов и минимизация углеродного следа дата-центров.</p>
             <div class="example-box"><small><strong>Пример:</strong> Автоматическое выключение тестовых сред на ночь экономит 40% бюджета.</small></div>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Внедрение AI в ИС</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Определите задачу: классификация, рекомендации, NLP.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Используйте готовые модели (HuggingFace / OpenAI API) без обучения с нуля.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Добавьте feature flags для A/B тестирования AI-функций.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Python (OpenAI API)</div>
+              <pre class="code-snippet">import openai
+
+client = openai.OpenAI(api_key="...")
+
+def classify_ticket(text: str) -> str:
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{
+            "role": "user",
+            "content": f"Категория: {text}"
+        }]
+    )
+    return resp.choices[0].message.content</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -2387,7 +2942,33 @@
               <i class="fa-solid fa-file-pdf"></i> Сохранить в PDF (Ctrl+P)
             </button>
           </div>
+        
+        <div class="how-to-panel">
+          <div class="how-to-header"><i class="fa-solid fa-code-branch"></i><span>Как применить: Чек-лист готовности ИС</span></div>
+          <div class="how-to-body">
+            <div class="how-to-steps">
+          <div class="how-to-step"><span class="step-num">1</span><span>Код: все тесты проходят, покрытие &gt; 80%, нет критических CVE.</span></div>
+          <div class="how-to-step"><span class="step-num">2</span><span>Документация: SRS, OpenAPI, диаграммы актуальны и версионированы.</span></div>
+          <div class="how-to-step"><span class="step-num">3</span><span>Деплой: CI/CD настроен, мониторинг работает, план отката готов.</span></div>
+            </div>
+            <div class="how-to-code">
+              <div class="code-label"><i class="fa-solid fa-terminal"></i> Makefile (единая точка входа)</div>
+              <pre class="code-snippet"># Единая точка входа для команды
+check:
+	npm run lint
+	npm test -- --coverage
+
+api-docs:
+	npx swagger-cli validate api.yaml
+	docker run -p 8080:8080 swaggerapi/swagger-ui
+
+deploy:
+	docker build -t app .
+	kubectl apply -f k8s/</pre>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </section>
 

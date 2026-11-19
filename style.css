@@ -2982,3 +2982,90 @@ body.perf-mode .dock-dot {
   color: #10b981;
   font-size: 0.95rem;
 }
+
+/* ===== INLINE HOW-TO PANEL ===== */
+.how-to-panel {
+  margin-top: 16px;
+  border: 1px solid rgba(0,242,254,0.25);
+  border-radius: 14px;
+  background: rgba(0,242,254,0.04);
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: fadeInUp 0.5s ease 0.3s both;
+}
+.how-to-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: rgba(0,242,254,0.1);
+  color: #00f2fe;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0,242,254,0.12);
+}
+.how-to-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+@media (max-width: 768px) {
+  .how-to-body { grid-template-columns: 1fr; }
+}
+.how-to-steps {
+  padding: 11px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-right: 1px solid rgba(0,242,254,0.1);
+}
+.how-to-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.77rem;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.85);
+}
+.step-num {
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0,242,254,0.18);
+  color: #00f2fe;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.how-to-code {
+  padding: 10px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: rgba(0,0,0,0.15);
+}
+.code-label {
+  font-size: 0.7rem;
+  color: #a855f7;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.code-snippet {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.69rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 8px 10px;
+  overflow-x: auto;
+  margin: 0;
+  white-space: pre;
+  max-height: 130px;
+}
