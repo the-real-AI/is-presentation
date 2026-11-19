@@ -2721,3 +2721,264 @@ body.perf-mode .dock-dot {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ==========================================================================
+   IMPLEMENTATION GUIDE BANNER & MODAL STYLES
+   ========================================================================== */
+.guide-pill-btn {
+  background: rgba(0, 242, 254, 0.12) !important;
+  border-color: rgba(0, 242, 254, 0.4) !important;
+  color: #00f2fe !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  font-weight: 700 !important;
+}
+
+.guide-pill-btn:hover {
+  background: rgba(0, 242, 254, 0.25) !important;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.4) !important;
+  transform: translateY(-2px);
+}
+
+.impl-guide-banner {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.08), rgba(168, 85, 247, 0.06));
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
+}
+
+.impl-guide-banner:hover {
+  border-color: rgba(0, 242, 254, 0.6);
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(168, 85, 247, 0.12));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 242, 254, 0.15);
+}
+
+.impl-guide-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #e2e8f0;
+}
+
+.impl-badge {
+  background: rgba(0, 242, 254, 0.2);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.impl-guide-btn {
+  background: rgba(0, 242, 254, 0.18);
+  border: 1px solid rgba(0, 242, 254, 0.45);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.impl-guide-btn:hover {
+  background: #00f2fe;
+  color: #050811;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
+}
+
+/* Modal Guide Content Styles */
+.guide-goal-card {
+  background: rgba(0, 242, 254, 0.08);
+  border-left: 4px solid #00f2fe;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.guide-goal-card h4 {
+  color: #00f2fe;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-goal-card p {
+  color: #cbd5e1;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.guide-section-title {
+  font-size: 1rem;
+  color: #f8fafc;
+  font-weight: 700;
+  margin: 22px 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+}
+
+.guide-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guide-step-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.86rem;
+  color: #e2e8f0;
+  line-height: 1.45;
+  transition: border-color 0.2s ease;
+}
+
+.guide-step-card:hover {
+  border-color: rgba(0, 242, 254, 0.3);
+}
+
+.guide-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 242, 254, 0.2);
+  color: #00f2fe;
+  font-weight: 800;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.guide-code-box {
+  background: #060911;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.guide-code-header {
+  background: rgba(15, 23, 42, 0.9);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.guide-code-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-copy-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.guide-copy-btn:hover {
+  background: rgba(0, 242, 254, 0.2);
+  color: #00f2fe;
+  border-color: rgba(0, 242, 254, 0.5);
+}
+
+.guide-code-content {
+  padding: 14px;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #38bdf8;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.guide-tools-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.guide-chip {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #d8b4fe;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.guide-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.guide-check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+  color: #e2e8f0;
+}
+
+.guide-check-item i {
+  color: #10b981;
+  font-size: 0.95rem;
+}
