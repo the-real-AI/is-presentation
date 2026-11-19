@@ -49,11 +49,6 @@
     </div>
 
     <div class="nav-right">
-      <button class="nav-btn guide-pill-btn" id="btn-guide" title="Инструкция по реализации для текущего слайда (I)">
-        <i class="fa-solid fa-screwdriver-wrench text-cyan"></i>
-        <span>Инструкция</span>
-      </button>
-
       <!-- Presentation Timer -->
       <div class="timer-badge" id="timer-badge" title="Таймер выступления">
         <i class="fa-regular fa-clock"></i>
@@ -2580,22 +2575,7 @@ def classify_ticket(text: str) -> str:
 
   
   <!-- Modal 5: Инструкция по реализации для каждого слайда -->
-  <div class="modal-overlay" id="modal-guide">
-    <div class="modal-box modal-large">
-      <div class="modal-header">
-        <div class="modal-title">
-          <i class="fa-solid fa-screwdriver-wrench text-accent"></i>
-          <span id="modal-guide-title">Инструкция по реализации</span>
-        </div>
-        <button class="modal-close" onclick="Presentation.toggleGuideModal(false)">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="modal-body" id="modal-guide-body">
-        <!-- Вставляется динамически скриптом для текущего слайда -->
-      </div>
-    </div>
-  </div>
+  
 
   <!-- Scripts -->
   <script src="script.js"></script>
